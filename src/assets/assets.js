@@ -9,7 +9,7 @@ export const projet7 = '/images/projet7.png';
 export const profileImage = '/images/beya1.jpeg';
 export const profile1Image = '/images/beya.jpeg';
 export const bgImage = '/images/background.jpeg';
-export const logoImages ='/images/logoBeya.jpeg';
+export const logoImages ='/images/logobeya.jpeg';
 export const ouvrage1 = '/images/ouvrage1.jpeg';
 export const ouvrage2 = '/images/ouvrage2.jpeg';
 
