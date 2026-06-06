@@ -1,15 +1,18 @@
 // Chemins des images - fichiers servis depuis le dossier public/
-export const projet1 = '/images/projet1.jpeg';
-export const projet2 = '/images/projet2.jpeg';
-export const projet3  = '/images/projet3.jpeg';
-export const projet4 = '/images/projet4.jpeg';
-export const projet5 = '/images/projet5.jpeg';
-export const projet6= '/images/projet6.jpeg';
-export const projet7 = '/images/projet7.png';
-export const profileImage = '/images/beya1.jpeg';
+export const gateau1 = '/images/piècemontéeprestigeblanc.png';
+export const gateau2 = '/images/gâteausafariroyale.png';
+export const gateau3  = '/images/boxcorporate.png';
+export const gateau4 = '/images/élégancenudecake.png';
+export const gateau5 = '/images/gâteauhautecouturerose.png';
+export const gateau6= '/images/sweettable.png';
+export const vitrine1= '/images/royalchocolat.png';
+export const vitrine2= '/images/designanniversaire.png';
+export const vitrine3= '/images/croissantpurbeurre.png';
+export const vitrine4= '/images/cafélatte.png';
+export const profileImage = '/images/logo.png';
 export const profile1Image = '/images/beya.jpeg';
 export const bgImage = '/images/background.jpeg';
-export const logoImages ='/images/logobeya.jpeg';
+export const logoImages ='/images/logo.png';
 export const ouvrage1 = '/images/ouvrage1.jpeg';
 export const ouvrage2 = '/images/ouvrage2.jpeg';
 
@@ -104,96 +107,6 @@ export const experiences = [
   },
 
 ];
-// --- IMPORT DES IMAGES (Assurez-vous que les fichiers existent ou utilisez des URLs) ---
-// import viteImg1 from './images/vite-lancement.jpg'; 
-
-export const projets = [
-  {
-    titre: 'Lancement VITE - Kinshasa',
-    description: 'Première phase opérationnelle du projet VITE visant l’autonomisation des jeunes entrepreneurs kinois.',
-    image: projet1, // Image Pro
-    lienDemo: '#',
-    lienGithub: '#',
-    technologies: ['Entrepreneuriat', 'Terrain', 'Impact'],
-    fonctionnalites: [
-      'Identification de 50 porteurs de projets',
-      'Ateliers de structuration de business plan',
-      'Mise en place d’un réseau de mentorat local',
-      'Accompagnement à la formalisation administrative',
-    ],
-  },
-  {
-    titre: 'Tournée Éveil des Consciences',
-    description: 'Série de conférences dans les universités de la RDC pour stimuler le leadership citoyen.',
-    image: 'https://unsplash.com',
-    lienDemo: '#',
-    lienGithub: '#',
-    technologies: ['Coaching', 'Éducation', 'Leadership'],
-    fonctionnalites: [
-      'Plus de 5000 étudiants sensibilisés',
-      'Distribution de guides de résilience',
-      'Création de cellules de réflexion locales',
-      'Partenariats avec 5 institutions académiques',
-    ],
-  },
-  {
-    titre: 'Incubateur VITE - Goma',
-    description: 'Extension du Projet VITE dans l’Est pour soutenir la résilience par l’activité économique.',
-    image: 'https://unsplash.com',
-    lienDemo: '#',
-    lienGithub: '#',
-    technologies: ['Résilience', 'Innovation', 'Action'],
-    fonctionnalites: [
-      'Soutien aux micro-entreprises de transformation',
-      'Formation en gestion de crise financière',
-      'Accès aux outils digitaux de vente',
-      'Suivi post-incubation de 6 mois',
-    ],
-  },
-  {
-    titre: 'Publication : Guide de Résilience',
-    description: 'Manuel pratique accompagnant la sortie de mon dernier livre pour passer de la lecture à l’application.',
-    image: 'https://unsplash.com',
-    lienDemo: '#',
-    lienGithub: '#',
-    technologies: ['Auteur', 'Manuel', 'Pratique'],
-    fonctionnalites: [
-      '30 exercices d’auto-coaching',
-      'Feuilles de route entrepreneuriales',
-      'Espace de prise de notes interactif',
-      'Disponible en version physique et PDF',
-    ],
-  },
-  {
-    titre: 'Programme Mentorat Femmes',
-    description: 'Branche spécifique de VITE dédiée au leadership féminin dans la société congolaise.',
-    image: 'https://unsplash.com',
-    lienDemo: '#',
-    lienGithub: '#',
-    technologies: ['Femmes Leaders', 'Empowerment'],
-    fonctionnalites: [
-      'Cercles de parole et d’échange',
-      'Ateliers sur la confiance en soi',
-      'Accompagnement au pitch de projet',
-      'Networking avec des femmes entrepreneures',
-    ],
-  },
-  {
-    titre: 'VITE Digital Hub',
-    description: 'Plateforme en ligne centralisant les ressources de formation pour les jeunes éloignés des centres urbains.',
-    image: 'https://unsplash.com',
-    lienDemo: '#',
-    lienGithub: '#',
-    technologies: ['Digital', 'Formation', 'Accessibilité'],
-    fonctionnalites: [
-      'Cours en ligne accessibles hors-connexion',
-      'Bibliothèque numérique de livres inspirants',
-      'Forum d’entraide entre membres VITE',
-      'Système de certification VITE-Action',
-    ],
-  },
-];
-
 
 export const works = [
   // 'Direction de projet e-commerce multilingue (équipe de 10 développeurs)',

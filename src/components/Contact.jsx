@@ -35,7 +35,7 @@ export default function Contact() {
 
     // Fallback Mailto si EmailJS non configuré
     if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
-      const mailtoLink = `mailto:ingebalouiscar@://gmail.com de ${formData.name}&body=${formData.message}`;
+      const mailtoLink = `mailto:ingebadelice@://gmail.com de ${formData.name}&body=${formData.message}`;
       window.location.href = mailtoLink;
       notificationService.dismiss(loadingToast);
       notificationService.success('Client email ouvert !');
@@ -128,7 +128,7 @@ export default function Contact() {
                     <FaUser className="absolute left-4 top-4 text-orange-500" />
                     <input type="text" name="name" value={formData.name} onChange={handleChange} required 
                       className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-green-800/50 border-none rounded-2xl focus:ring-2 focus:ring-orange-500 dark:text-white"
-                      placeholder="Louiscar Ingeba" />
+                      placeholder="delice Ingeba" />
                   </div>
                 </div>
                 <div>

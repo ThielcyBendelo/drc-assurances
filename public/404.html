@@ -1,39 +1,105 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>404 - Page non trouvée</title>
-    <style>
-      body {
-        background: #18181b;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        margin: 0;
-      }
-      h1 {
-        font-size: 4rem;
-        color: #a21caf;
-      }
-      p {
-        font-size: 1.5rem;
-        margin-top: 1rem;
-      }
-      a {
-        color: #38bdf8;
-        text-decoration: underline;
-        margin-top: 2rem;
-      }
-    </style>
-  </head>
-  <body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 - Douceur introuvable | M-DELICE</title>
+  
+  <!-- Chargement des polices de la marque M-DELICE -->
+  <link rel="preconnect" href="https://googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link href="https://googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #fafaf9; /* Fond crème doux assorti à la vitrine */
+      color: #44403c;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .error-container {
+      max-w: 500px;
+      width: 100%;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 7rem;
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(to right, #78350f, #ea580c); /* Dégradé Chocolat/Orange */
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      color: #451a03; /* Couleur chocolat intense */
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1rem;
+      color: #78716c;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn-home {
+      display: inline-block;
+      background-color: #78350f; /* Couleur de la marque M-DELICE */
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      tracking-widest: 0.1em;
+      padding: 1rem 2.25rem;
+      border-radius: 9999px; /* Bouton arrondi style pilule */
+      box-shadow: 0 10px 15px -3px rgba(120, 53, 15, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .btn-home:hover {
+      background-color: #ea580c; /* Changement vers l'orange au survol */
+      transform: translateY(-2px);
+      box-shadow: 0 20px 25px -5px rgba(234, 88, 12, 0.3);
+    }
+
+    .btn-home:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="error-container">
+    <!-- Code erreur stylisé -->
     <h1>404</h1>
-    <p>Oups, cette page n'existe pas ou a été déplacée.</p>
-    <a href="/">Retour à l'accueil</a>
-  </body>
+    
+    <!-- Message contextuel pâtisserie -->
+    <h2>Oups, la recette a échoué !</h2>
+    
+    <p>Le gâteau ou la page que vous recherchez n'est pas encore sorti du four ou a été déplacé vers une autre vitrine.</p>
+    
+    <!-- Redirection vers la page d'accueil de la vitrine -->
+    <a href="/" class="btn-home">Retourner à l'accueil</a>
+  </div>
+
+</body>
 </html>

@@ -1,170 +1,257 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-// Remplacez 'nom-du-fichier.jpg' par le vrai nom de vos images dans le dossier assets
-import  ouvrage1  from '../assets/ouvrage1.jpeg';
-import  ouvrage2  from '../assets/ouvrage2.jpeg';
-
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  FaBookOpen, 
-  FaShoppingBag, 
-  FaQuoteRight, 
-  FaCheck, 
-  FaArrowRight 
+  FaBoxes, FaPlus, FaExclamationTriangle, FaTrash, 
+  FaUserFriends, FaArrowRight, FaPen, FaMinus, FaEdit, FaCheckCircle 
 } from 'react-icons/fa';
 import QuoteModal from './QuoteModal';
 
-const ouvrages = [
+// Données initiales du stock M-DELICE Abidjan
+const initialIngredients = [
   {
-    title: "Le Réveil de la Conscience",
-    extractUrl: "/extraits/livre1_extrait.pdf",
-    subtitle: "L'éveil pour une transformation durable",
-    description: "Un voyage introspectif pour briser les chaînes mentales et s'affirmer dans une société en pleine mutation.",
-    details: [
-      { label: "Format", value: "Broché & Numérique" },
-      { label: "Pages", value: "240 pages" },
-      { label: "Thème", value: "Leadership" }
-    ],
-    points: [
-      "Vaincre la peur du regard des autres",
-      "Développer une discipline de fer",
-      "Comprendre son rôle dans la cité"
-    ],
-    price: "15.000 FC",
-    image: ouvrage1,
+    id: 1,
+    title: "Beurre de Baratte AOP 82%",
+    category: "frais",
+    supplierUrl: "https://wa.me",
+    subtitle: "Viennoiseries & Pâtes",
+    quantity: 45, // Stock sous forme de nombre pour les calculs CRUD
+    alertThreshold: 20,
+    location: "Chambre Froide 1",
+    supplier: "Distri-Ivoire SAS",
+    price: "4 500 F/kg",
+    image: "https://unsplash.com"
   },
   {
-    title: "La Voix de la Résilience",
-    extractUrl: "/extraits/livre1_extrait.pdf",
-    subtitle: "Manuel de survie pour leaders africains",
-    description: "Comment transformer chaque obstacle en un tremplin vers le succès entrepreneurial et personnel.",
-    details: [
-      { label: "Format", value: "Édition Prestige" },
-      { label: "Pages", value: "195 pages" },
-      { label: "Thème", value: "Entrepreneuriat" }
-    ],
-    points: [
-      "L'art de rebondir après l'échec",
-      "Gérer son énergie et non son temps",
-      "Bâtir un réseau d'influence solide"
-    ],
-    price: "20.000 FC",
-    image: ouvrage2,
+    id: 2,
+    title: "Chocolat Noir de Couverture 64%",
+    category: "secs",
+    supplierUrl: "https://wa.me",
+    subtitle: "Mousses & Ganaches",
+    quantity: 12,
+    alertThreshold: 25, // Déclenche l'alerte car la quantité (12) < au seuil (25)
+    location: "Réserve Sèche",
+    supplier: "Cacao-Afrik Abidjan",
+    price: "6 200 F/kg",
+    image: "https://unsplash.com"
   }
 ];
 
-export default function Livres() {
+export default function Skills() {
+  const [stockList, setStockList] = useState(initialIngredients);
+  const [activeFilter, setActiveFilter] = useState("tous");
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedBook, setSelectedBook] = useState("");
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [currentExtract, setCurrentExtract] = useState("");
+  const [selectedIngredient, setSelectedIngredient] = useState("");
+  
+  // États pour le formulaire d'ajout CRUD (Create)
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newIngredient, setNewIngredient] = useState({
+    title: '', subtitle: '', category: 'secs', price: '', 
+    quantity: '', alertThreshold: '', location: '', supplier: ''
+  });
 
-  const handleOrderClick = (title) => {
-    setSelectedBook(title);
-    setModalOpen(true);
+  // --- ACTIONS CRUD ---
+
+  // 1. CREATE : Ajouter un ingrédient
+  const handleCreateIngredient = (e) => {
+    e.preventDefault();
+    if (!newIngredient.title || !newIngredient.quantity) return;
+
+    const createdItem = {
+      id: Date.now(),
+      title: newIngredient.title,
+      subtitle: newIngredient.subtitle || "Matière première",
+      category: newIngredient.category,
+      supplierUrl: "https://wa.me",
+      quantity: Number(newIngredient.quantity),
+      alertThreshold: Number(newIngredient.alertThreshold) || 0,
+      location: newIngredient.location || "Réserve",
+      supplier: newIngredient.supplier || "Fournisseur local",
+      price: newIngredient.price ? `${newIngredient.price} F/kg` : "Non spécifié",
+      image: "https://unsplash.com"
+    };
+
+    setStockList([createdItem, ...stockList]);
+    setShowAddForm(false);
+    setNewIngredient({ title: '', subtitle: '', category: 'secs', price: '', quantity: '', alertThreshold: '', location: '', supplier: '' });
   };
 
-  const handlePreviewClick = (extractUrl) => {
-    if(extractUrl !== "#") {
-      window.open(extractUrl, '_blank');
+  // 2. UPDATE : Ajuster les quantités (+/-) rapides
+  const handleUpdateQuantity = (id, amount) => {
+    setStockList(prevList => 
+      prevList.map(item => {
+        if (item.id === id) {
+          const nextQty = item.quantity + amount;
+          return { ...item, quantity: nextQty < 0 ? 0 : nextQty };
+        }
+        return item;
+      })
+    );
+  };
+
+  // 3. DELETE : Supprimer un ingrédient du tableau
+  const handleDeleteIngredient = (id) => {
+    if (window.confirm("Voulez-vous vraiment retirer cet ingrédient du stock ?")) {
+      setStockList(stockList.filter(item => item.id !== id));
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+  // --- SÉLECTIONS ET FILTRES (READ) ---
+  const handleOrderClick = (title) => {
+    setSelectedIngredient(`Réapprovisionnement Urgent : ${title}`);
+    setModalOpen(true);
   };
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  const handleSupplierContact = (url) => {
+    window.open(url, '_blank');
   };
+
+  const filteredStock = activeFilter === "tous" 
+    ? stockList 
+    : stockList.filter(item => item.category === activeFilter);
 
   return (
-    <motion.section
-      id="livres"
-      className="py-24 px-6 bg-gray-50 dark:bg-green-950 transition-colors duration-500"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      variants={containerVariants}
+    <motion.section 
+      id="stock" 
+      className="py-20 px-6 bg-stone-50 dark:bg-stone-950 min-h-screen transition-colors duration-500"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
     >
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-20">
-          <h1 className="text-5xl md:text-7xl font-black text-green-900 dark:text-lime-400 mb-6 uppercase tracking-tighter">
-            Ma Bibliothèque
+        
+        {/* 1. EN-TÊTE DE LA PAGE */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl md:text-7xl font-black text-stone-950 dark:text-amber-400 font-serif mb-6 uppercase tracking-tight">
+            Contrôle des Stocks
           </h1>
           <div className="h-2 w-32 bg-orange-500 mx-auto rounded-full mb-8" />
-          <p className="text-xl text-gray-600 dark:text-green-100/70 max-w-2xl mx-auto italic">
-            "La plume est le prolongement de mon combat pour l'éveil des consciences."
+          <p className="text-xl text-stone-600 dark:text-stone-300 max-w-2xl mx-auto italic">
+            "Mettez à jour vos matières premières en temps réel (Système CRUD) pour piloter l'atelier."
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {ouvrages.map((livre, idx) => (
-            <motion.div key={idx} variants={cardVariants} className="group bg-white dark:bg-green-900/40 rounded-[50px] overflow-hidden flex flex-col md:flex-row shadow-2xl border border-white dark:border-green-800">
-              {/* Image Section */}
-              <div className="md:w-2/5 relative h-80 md:h-auto">
-                <img src={livre.image} alt={livre.title} className="w-full h-full object-cover" />
-                <div className="absolute top-6 left-6 bg-green-900 text-lime-400 px-4 py-2 rounded-xl font-black shadow-lg">
-                  {livre.price}
-                </div>
-              </div>
-
-              {/* Content Section */}
-              <div className="md:w-3/5 p-10 flex flex-col">
-                <h2 className="text-3xl font-black text-green-900 dark:text-white mb-2">{livre.title}</h2>
-                <h3 className="text-xs uppercase tracking-[0.2em] text-orange-500 font-black mb-6">{livre.subtitle}</h3>
-
-                {/* Details Grid */}
-                <div className="grid grid-cols-3 gap-2 mb-6 py-4 border-y border-gray-100 dark:border-green-800">
-                  {livre.details.map((det, i) => (
-                    <div key={i}>
-                      <p className="text-[10px] uppercase text-gray-400 font-bold">{det.label}</p>
-                      <p className="text-xs font-black text-green-900 dark:text-white">{det.value}</p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Points Clés */}
-                <div className="space-y-2 mb-8">
-                  {livre.points.map((p, i) => (
-                    <div key={i} className="flex items-center gap-2 text-sm text-gray-600 dark:text-green-100">
-                      <FaCheck className="text-lime-500 text-[10px]" /> <span>{p}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Actions Buttons */}
-                <div className="mt-auto flex flex-col sm:flex-row gap-3">
-                  <button 
-                    onClick={() => handleOrderClick(livre.title)}
-                    className="flex-1 bg-green-900 dark:bg-lime-500 text-white dark:text-green-950 py-4 rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-orange-500 transition-all shadow-lg"
-                  >
-                    <FaShoppingBag /> Commander
-                  </button>
-
-                  <button 
-                    onClick={() => handlePreviewClick(livre.extractUrl)}
-                    className="flex-1 group relative border-2 border-green-900/10 dark:border-green-800 text-green-900 dark:text-white py-4 rounded-2xl font-bold transition-all duration-300 hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-500/10 overflow-hidden"
-                  >
-                    <div className="flex items-center justify-center gap-2 relative z-10">
-                      <FaBookOpen className="text-orange-500 group-hover:rotate-12 transition-transform" />
-                      <span>Extrait</span>
-                    </div>
-                    <div className="absolute bottom-0 left-0 h-1 bg-orange-500 w-0 group-hover:w-full transition-all duration-500"></div>
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+        {/* 2. ZONE DES COMMANDES FILTRES ET BOUTON AJOUT */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 bg-white dark:bg-stone-900 p-4 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm">
+          <div className="flex flex-wrap gap-2">
+            {["tous", "frais", "secs"].map((filter) => (
+              <button
+                key={filter}
+                onClick={() => setActiveFilter(filter)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase transition-all ${
+                  activeFilter === filter ? 'bg-amber-800 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300'
+                }`}
+              >
+                {filter === 'tous' ? 'Tous' : filter === 'frais' ? 'Produits Frais' : 'Épicerie Sèche'}
+              </button>
+            ))}
+          </div>
+          
+          <button 
+            onClick={() => setShowAddForm(!showAddForm)}
+            className="w-full sm:w-auto px-5 py-2.5 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold uppercase rounded-xl flex items-center justify-center gap-2 transition-colors shadow-md"
+          >
+            <FaPlus /> {showAddForm ? "Fermer le formulaire" : "Ajouter un ingrédient"}
+          </button>
         </div>
 
-        <QuoteModal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          defaultService={selectedBook}
-        />
-      </div>
+        {/* 3. FORMULAIRE CRUD : AJOUT INTERACTIF DÉPLOYABLE (CREATE) */}
+        <AnimatePresence>
+          {showAddForm && (
+            <motion.form 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              onSubmit={handleCreateIngredient}
+              className="mb-12 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-[30px] p-6 md:p-8 shadow-lg overflow-hidden space-y-4"
+            >
+              <h3 className="text-xl font-bold font-serif text-stone-900 dark:text-white mb-2">Nouvel Ingrédient</h3>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <input type="text" placeholder="Nom de la matière première *" required value={newIngredient.title} onChange={(e) => setNewIngredient({...newIngredient, title: e.target.value})} className="p-3 bg-stone-50 dark:bg-stone-800 text-sm rounded-xl border border-stone-100 dark:border-stone-700 text-white outline-none focus:ring-1 focus:ring-amber-500" />
+                <input type="text" placeholder="Usage (Ex: Mousses, Glaçages)" value={newIngredient.subtitle} onChange={(e) => setNewIngredient({...newIngredient, subtitle: e.target.value})} className="p-3 bg-stone-50 dark:bg-stone-800 text-sm rounded-xl border border-stone-100 dark:border-stone-700 text-white outline-none focus:ring-1 focus:ring-amber-500" />
+                <input type="number" placeholder="Quantité initiale (kg) *" required min="0" value={newIngredient.quantity} onChange={(e) => setNewIngredient({...newIngredient, quantity: e.target.value})} className="p-3 bg-stone-50 dark:bg-stone-800 text-sm rounded-xl border border-stone-100 dark:border-stone-700 text-white outline-none focus:ring-1 focus:ring-amber-500" />
+                <input type="number" placeholder="Seuil d'alerte critique (kg)" min="0" value={newIngredient.alertThreshold} onChange={(e) => setNewIngredient({...newIngredient, alertThreshold: e.target.value})} className="p-3 bg-stone-50 dark:bg-stone-800 text-sm rounded-xl border border-stone-100 dark:border-stone-700 text-white outline-none focus:ring-1 focus:ring-amber-500" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <select value={newIngredient.category} onChange={(e) => setNewIngredient({...newIngredient, category: e.target.value})} className="p-3 bg-stone-50 dark:bg-stone-800 text-sm rounded-xl border border-stone-100 dark:border-stone-700 text-white outline-none focus:ring-1 focus:ring-amber-500">
+                  <option value="secs">Épicerie Sèche</option>
+                  <option value="frais">Produits Frais</option>
+                </select>
+                <input type="text" placeholder="Prix unitaire moyen (Ex: 4000)" value={newIngredient.price} onChange={(e) => setNewIngredient({...newIngredient, price: e.target.value})} className="p-3 bg-stone-50 dark:bg-stone-800 text-sm rounded-xl border border-stone-100 dark:border-stone-700 text-white outline-none focus:ring-1 focus:ring-amber-500" />
+                <input type="text" placeholder="Zone de stockage (Ex: Frigo 2)" value={newIngredient.location} onChange={(e) => setNewIngredient({...newIngredient, location: e.target.value})} className="p-3 bg-stone-50 dark:bg-stone-800 text-sm rounded-xl border border-stone-100 dark:border-stone-700 text-white outline-none focus:ring-1 focus:ring-amber-500" />
+<input type="text" placeholder="Fournisseur (Ex: Distri-Ivoire)" value={newIngredient.supplier} onChange={(e) => setNewIngredient({...newIngredient, supplier: e.target.value})} className="p-3 bg-stone-50 dark:bg-stone-800 text-sm rounded-xl border border-stone-100 dark:border-stone-700 text-white outline-none focus:ring-1 focus:ring-amber-500" />  
+              </div>
+              <button type="submit" className="px-6 py-3 bg-amber-800 hover:bg-orange-600 text-white rounded-xl font-bold text-sm uppercase tracking-wider shadow-md transition-colors">
+                <FaCheckCircle className="inline-block mr-2" /> Ajouter l'ingrédient</button> 
+            </motion.form>
+          )}
+        </AnimatePresence>
+        <AnimatePresence>
+          {modalOpen && (
+            <QuoteModal />
+          )}
+        </AnimatePresence>  
+        {/* 4. TABLEAU DE GESTION DES STOCKS AVEC ACTIONS CRUD */}
+        <div className="overflow-x-auto">
+          <table className="w-full bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-lg"> 
+            <thead>
+              <tr className="text-left text-xs uppercase text-stone-400 font-bold tracking-wider border-b border-stone-100 dark:border-stone-800">
+                <th className="p-4">Ingrédient</th> 
+                <th className="p-4">Quantité</th>
+                <th className="p-4">Seuil d'Alerte</th>
+                <th className="p-4">Catégorie</th>
+                <th className="p-4">Prix Unit.</th>
+                <th className="p-4">Emplacement</th>
+                <th className="p-4">Fournisseur</th>
+                <th className="p-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-stone-50 dark:divide-stone-800 text-sm font-medium">
+              {filteredStock.map((item) => (
+                <tr key={item.id} className={`text-stone-700 dark:text-stone-300 hover:bg-stone-50/50 dark:hover:bg-stone-800/30 transition-colors ${item.quantity < item.alertThreshold ? 'bg-red-50 dark:bg-red-900/20' : ''}`}>  
+                  <td className="p-4 flex items-center gap-3">
+                    <div className="w-10 h-10 bg-stone-800/80 rounded-full flex items-center justify-center text-white">
+                      <FaBoxes size={14} /> 
+                    </div>
+                    <div>
+                      <p className="font-bold text-stone-900 dark:text-white">{item.title}</p>    
+                      <p className="text-xs text-stone-500 dark:text-stone-400">{item.subtitle}</p>
+                    </div>
+                  </td> 
+                  <td className="p-4">
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => handleUpdateQuantity(item.id, -1)} className="p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors">  
+                        <FaMinus size={10} />
+                      </button>
+                      <span>{item.quantity} kg</span> 
+                      <button onClick={() => handleUpdateQuantity(item.id, 1)} className="p-1 bg-green-500 hover:bg-green-600 text-white rounded-full transition-colors">
+                        <FaPlus size={10} />
+                      </button> 
+                    </div>
+                  </td>
+                  <td className="p-4">{item.alertThreshold} kg</td> 
+                  <td className="p-4">{item.category === 'frais' ? 'Frais' : 'Sec'}</td>
+                  <td className="p-4">{item.price}</td>
+                  <td className="p-4">{item.location}</td>  
+                  <td className="p-4">
+                    <button onClick={() => handleSupplierContact(item.supplierUrl)} className="text-amber-500 hover:text-orange-400 transition-colors">
+                      {item.supplier}
+                    </button>
+                  </td>
+                  <td className="p-4">
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => handleEditItem(item)} className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors">
+                        <FaEdit size={14} />
+                      </button>
+                      <button onClick={() => handleDeleteItem(item.id)} className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors">
+                        <FaTrash size={14} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>  
     </motion.section>
   );
 }

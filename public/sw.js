@@ -1,5 +1,5 @@
 // Service Worker pour PWA
-const CACHE_NAME = 'louiscar-portfolio-v1.0.0';
+const CACHE_NAME = 'delice-portfolio-v1.0.0';
 const STATIC_CACHE = `${CACHE_NAME}-static`;
 const DYNAMIC_CACHE = `${CACHE_NAME}-dynamic`;
 

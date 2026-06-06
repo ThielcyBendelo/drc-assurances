@@ -1,85 +1,51 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/logobeya.jpeg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Titre et Métadonnées Principales -->
+  <title>M-DELICE | Haute Pâtisserie, Cake Design & Douceurs à Abidjan</title>
+  <meta name="description" content="Découvrez M-DELICE, votre pâtisserie d'exception à Abidjan. Gâteaux d'anniversaire, cake design sur mesure, viennoiseries et gourmandises en Côte d'Ivoire." />
+  <meta name="keywords" content="M-DELICE, patisserie Abidjan, gâteau anniversaire Côte d'Ivoire, cake design Abidjan, viennoiserie, traiteur Abidjan, pâtisserie fine" />
+  <meta name="author" content="M-DELICE" />
+  <link rel="icon" type="image/jpeg" href="/logo.png" />
 
-    <!-- Titre et description -->
-    <title>Verro BM | Entrepreneure engagée et figure de proue de l'eveil citoyen</title>
-    <meta
-      name="description"
-      content="Portfolio de BM coach | engagée et figure de proue de l'eveil citoyen."
-    />
-    <meta
-      name="keywords"
-      content="Voix de la résilience et guide pour une une nouvelle génération, ,"
-    />
-    <meta name="author" content="BM verro" />
+  <!-- Chargement Optimisé des Polices Gourmandes et Modernes -->
+  <link rel="preconnect" href="https://googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link href="https://googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
 
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json" />
+  <!-- PWA (Progressive Web App) & Configuration Mobile -->
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/logo.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <meta name="theme-color" content="#d97706" /> <!-- Couleur Ambre/Dorée pour rappeler la pâtisserie -->
+  <meta name="msapplication-TileColor" content="#d97706" />
+  <meta name="msapplication-navbutton-color" content="#d97706" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="M-DELICE" />
+  <meta name="mobile-web-app-capable" content="yes" />
 
-    <!-- Icônes PWA -->
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="/icon-192x192.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="512x512"
-      href="/icon-512x512.png"
-    />
-    <link rel="apple-touch-icon" href="/icon-apple-touch.png" />
+  <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://delice.com" />
+  <meta property="og:title" content="M-DELICE | L'art de la pâtisserie fine à Abidjan" />
+  <meta property="og:description" content="Sublimez vos événements avec nos créations uniques : gâteaux personnalisés, douceurs locales et pièces montées sur mesure en Côte d'Ivoire." />
+  <meta property="og:image" content="/logo.png" />
+  <meta property="og:locale" content="fr_FR" />
 
-    <!-- Couleurs de thème -->
-    <meta name="theme-color" content="#8b5cf6" />
-    <meta name="msapplication-TileColor" content="#8b5cf6" />
-    <meta name="msapplication-navbutton-color" content="#8b5cf6" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
-
-    <!-- Configuration PWA -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="Verro" />
-    <meta name="mobile-web-app-capable" content="yes" />
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
-
-  <!-- Open Graph -->
-    <meta
-      property="og:title"
-      content="Voix de la résilience et guide pour une une nouvelle génération,"
-    />
-    <meta
-      property="og:description"
-      content="Portfolio professionnel de Verro BM  la voix de la résiliance et guide pour la nouvelle génération."
-    />
-    <meta property="og:image" content="/screenshot-desktop.png" />
-    <meta property="og:url" content="https://louiscar.com" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="fr_FR" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Verro BM  la voix de la résiliance et guide pour la nouvelle génération. "
-    />
-    <meta
-      name="twitter:description"
-      content="Portfolio Verro BM  la voix de la résiliance et guide pour la nouvelle génération, spécialisée dans la réalité du terrain."
-    />
-    <meta name="twitter:image" content="/screenshot-desktop.png" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://delice.com" />
+  <meta name="twitter:title" content="M-DELICE | L'art de la pâtisserie fine à Abidjan" />
+  <meta name="twitter:description" content="Créations gourmandes et cake design sur mesure. Commandez vos gâteaux d'exception à Abidjan." />
+  <meta name="twitter:image" content="/logo.png" />
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
 </html>

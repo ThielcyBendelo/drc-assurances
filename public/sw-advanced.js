@@ -1,6 +1,6 @@
 // 🔧 Service Worker amélioré avec Background Sync
 const CACHE_VERSION = '1.2.0';
-const CACHE_NAME = `Louiscar-ingeba-portfolio-v${CACHE_VERSION}`;
+const CACHE_NAME = `delice-ingeba-portfolio-v${CACHE_VERSION}`;
 const STATIC_CACHE = `${CACHE_NAME}-static`;
 const DYNAMIC_CACHE = `${CACHE_NAME}-dynamic`;
 const FORM_CACHE = `${CACHE_NAME}-forms`;

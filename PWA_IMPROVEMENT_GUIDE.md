@@ -43,7 +43,7 @@ pwa-asset-generator icon-192x192.svg ./public --manifest ./public/manifest.json
 ```javascript
 // Ajouter versioning automatique
 const CACHE_VERSION = new Date().getTime();
-const CACHE_NAME = `Louiscar-v${CACHE_VERSION}`;
+const CACHE_NAME = `delice-v${CACHE_VERSION}`;
 ```
 
 ### **2. Stratégie Background Sync :**

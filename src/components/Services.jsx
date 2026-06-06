@@ -1,141 +1,211 @@
 import React, { useState } from "react";
-import QuoteModal from "./QuoteModal"; 
-import { FaUsers, FaLightbulb, FaMicrophoneAlt, FaRocket, FaEnvelope, FaCheckCircle } from "react-icons/fa";
+import QuoteModal from "./QuoteModal"; // Conservé si vous l'utilisez pour un formulaire de devis sur-mesure
+import { FaUtensils, FaBirthdayCake, FaCookie, FaCoffee, FaWhatsapp, FaCheckCircle, FaExclamationTriangle, FaFileInvoice } from "react-icons/fa";
+import { vitrine1, vitrine2, vitrine3, vitrine4 } from "../assets/assets";
 
-const services = [
+// Catalogue des créations M-DELICE avec l'ajout des images
+const itemsCatalogue = [
   {
-    title: "Coaching Individuel - Éveil de Conscience",
-    icon: <FaLightbulb />,
-    description: "Accompagnement personnalisé pour déconstruire les blocages et révéler votre potentiel de leader.",
-    template: "Séances privées à Kinshasa ou en ligne, bilan de compétences émotionnelles, exercices de leadership et suivi de progression mensuel.",
-    benefits: ["Prise de conscience", "Confiance en soi", "Leadership civique", "Clarté de vision"],
-    price: "Sur devis",
+    title: "Le Royal Chocolat",
+    category: "entremets",
+    icon: <FaUtensils />,
+    image: vitrine1, // Exemple d'image chocolat fin
+    description: "Biscuit croustillant praliné, mousse légère au chocolat noir 64% et son glaçage miroir brillant.",
+    details: "Disponible en formats 4, 6 ou 8 parts. Idéal pour les repas de fête et les amateurs de cacao intense.",
+    tags: ["Chocolat Fin", "Croustillant", "Best-Seller", "Fait Maison"],
+    price: "18 000 FCFA",
+    inStock: true,
   },
   {
-    title: "Conférences & Ateliers de Groupe",
-    icon: <FaMicrophoneAlt />,
-    description: "Interventions dynamiques en milieu scolaire, universitaire ou professionnel pour inspirer le changement.",
-    template: "Thématiques sur la résilience africaine, la prise de conscience citoyenne, la gestion du temps et l'entrepreneuriat éthique.",
-    benefits: ["Impact collectif", "Motivation forte", "Outils pratiques", "Interaction direct"],
-    price: "Sur devis",
+    title: "Cake Design Anniversaire Prestige",
+    category: "cake-design",
+    icon: <FaBirthdayCake />,
+    image: vitrine2, // Exemple d'image gâteau design coloré
+    description: "Gâteau d'exception entièrement personnalisé, saveurs au choix (Vanille/Fraise, Chocolat/Caramel).",
+    details: "Décorations faites à la main en pâte à sucre. Nécessite une commande préalable de 3 jours minimum.",
+    tags: ["Sur Mesure", "Événement", "Personnalisé", "Artisanal"],
+    price: "Sur Devis",
+    inStock: false, // Uniquement sur commande
   },
   {
-    title: "Accompagnement Entrepreneurial (VITE)",
-    icon: <FaRocket />,
-    description: "Transformer vos idées en projets concrets et générateurs de valeur sur le terrain africain.",
-    template: "Analyse de projet, stratégie d'exécution rapide, structuration de l'offre et mentorat sur la réalité du marché congolais.",
-    benefits: ["Action immédiate", "Modèle économique", "Réseau local", "Résultats VITE"],
-    price: "Sur devis",
+    title: "Croissant Pur Beurre AOP",
+    category: "viennoiseries",
+    icon: <FaCookie />,
+    image: vitrine3, // Exemple d'image viennoiserie feuilletée
+    description: "Feuilletage traditionnel inversé au beurre de baratte, croustillant à l'extérieur et fondant à l'intérieur.",
+    details: "Cuit sur place chaque matin dans notre atelier à Abidjan pour vos petits-déjeuners gourmands.",
+    tags: ["Pur Beurre", "Frais du Jour", "Tradition"],
+    price: "1 500 FCFA",
+    inStock: true,
   },
   {
-    title: "Transmission & Mentorat Auteur",
-    icon: <FaUsers />,
-    description: "Ateliers d'écriture et de transmission basés sur mes ouvrages pour cultiver la résilience.",
-    template: "Cercle de lecture critique, partage d'expérience d'auteur, aide à la structuration de pensée et mentorat pour futurs auteurs.",
-    benefits: ["Héritage intellectuel", "Sagesse pratique", "Résilience", "Transmission"],
-    price: "Sur devis",
+    title: "Café Latte Gourmand & Caramel",
+    category: "boissons",
+    icon: <FaCoffee />,
+    image: vitrine4, // Exemple d'image boisson café gourmand
+    description: "Espresso de spécialité locale, lait velouté et coulis de caramel beurre salé maison.",
+    details: "Servi chaud ou frappé selon vos envies pour accompagner votre pause douceur à la boutique.",
+    tags: ["Café Local", "Caramel Maison", "Fraîcheur"],
+    price: "2 500 FCFA",
+    inStock: true,
   },
 ];
 
-// Helper pour la modale - Adapté à vos nouveaux titres
-function getServiceKey(title) {
-  const t = title.trim();
-  if (t.includes("Coaching Individuel")) return "Coaching Individuel";
-  if (t.includes("Conférences")) return "Conférences & Ateliers";
-  if (t.includes("Accompagnement Entrepreneurial")) return "Accompagnement VITE";
-  if (t.includes("Transmission")) return "Mentorat Auteur";
-  return "autre";
-}
+// Catégories disponibles pour les filtres
+const categories = [
+  { id: "tous", label: "Tout Voir" },
+  { id: "entremets", label: "Entremets & Tartes" },
+  { id: "cake-design", label: "Cake Design" },
+  { id: "viennoiseries", label: "Viennoiseries" },
+  { id: "boissons", label: "Cafétéria" },
+];
 
-export default function Services() {
+export default function Vitrine() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState("");
+  const [activeFilter, setActiveFilter] = useState("tous");
 
-  const handleQuoteClick = (serviceKey) => {
-    setSelectedService(serviceKey);
+  // Filtrer les produits en fonction de l'onglet actif
+  const filteredItems = activeFilter === "tous" 
+    ? itemsCatalogue 
+    : itemsCatalogue.filter(item => item.category === activeFilter);
+
+  // Générateur de lien WhatsApp automatique
+  const handleWhatsAppOrder = (productName) => {
+    const phoneNumber = "22500000000"; // Remplacez par le vrai numéro WhatsApp de M-DELICE
+    const message = encodeURIComponent(`Bonjour M-DELICE, je souhaite commander ou avoir des informations sur le produit : ${productName}`);
+    window.open(`https://wa.me{phoneNumber}?text=${message}`, "_blank");
+  };
+
+  const handleQuoteClick = (productName) => {
+    setSelectedService(productName);
     setModalOpen(true);
   };
 
   return (
-    <section id="services" className="py-20 px-4 bg-white dark:bg-green-950 transition-colors duration-500">
+    <section id="vitrine" className="py-24 px-10 bg-stone-50 dark:bg-stone-950 transition-colors duration-500">
       <div className="max-w-7xl mx-auto">
         
         {/* En-tête de section rafraîchi */}
-        <div className="mb-16 text-center">
-          <h2 className="text-4xl md:text-5xl font-black text-green-900 dark:text-lime-400 uppercase tracking-tighter">
-            Mes Offres d'Accompagnement
+        <div className="mb-8 text-center">
+          <h2 className="text-4xl md:text-5xl font-black text-amber-950 dark:text-amber-400 font-serif uppercase tracking-tight">
+            Notre Vitrine Gourmande
           </h2>
           <div className="h-1.5 w-24 bg-orange-500 mx-auto rounded-full mt-4"></div>
-          <p className="text-xl text-gray-600 dark:text-green-100 font-medium max-w-3xl mx-auto mt-6 italic">
-            "Bâtir des consciences fortes et des projets durables pour transformer l'Afrique aujourd'hui."
+          <p className="text-xl text-stone-600 dark:text-stone-300 font-medium max-w-3xl mx-auto mt-6 italic">
+            "Succombez à nos pâtisseries d'exception et créations artisanales élaborées chaque jour au cœur d'Abidjan."
           </p>
         </div>
 
-        {/* Grille de services */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {services.map((service, idx) => (
-            <div
-              key={idx}
-              className="bg-green-50/50 dark:bg-green-900/30 rounded-[40px] shadow-sm p-10 flex flex-col border border-green-100 dark:border-green-800 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 group"
+        {/* Barre de Filtrage par Catégorie */}
+        <div className="flex flex-wrap justify-center gap-3 mb-16">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveFilter(cat.id)}
+              className={`px-6 py-2.5 rounded-full text-xs md:text-sm font-bold tracking-wide uppercase transition-all shadow-sm ${
+                activeFilter === cat.id
+                  ? "bg-amber-800 text-white shadow-amber-800/20"
+                  : "bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-800 hover:border-amber-700"
+              }`}
             >
-              <div className="flex justify-between items-start mb-6">
-                <div className="text-5xl text-orange-500 group-hover:scale-110 transition-transform duration-300">
-                  {service.icon}
-                </div>
-                <div className="px-4 py-1 bg-white dark:bg-green-800 rounded-full text-green-700 dark:text-lime-400 text-xs font-bold shadow-sm">
-                  {service.price}
-                </div>
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Grille du catalogue */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          {filteredItems.map((item, idx) => (
+            <div 
+              key={idx} 
+              className="bg-white dark:bg-stone-900 rounded-[40px] shadow-sm flex flex-col border border-stone-100 dark:border-stone-850 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 group overflow-hidden"
+            >
+              
+              {/* ZONE IMAGE AJOUTÉE : Hauteur fixe, zoom au survol et gestion adaptative */}
+              <div className="relative h-64 w-full bg-stone-100 overflow-hidden">
+                <img 
+                  src={item.image} 
+                  alt={item.title} 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-900/20 to-transparent pointer-events-none" />
               </div>
 
-              <h3 className="text-2xl font-black mb-4 text-green-900 dark:text-white leading-tight">
-                {service.title}
-              </h3>
+              {/* Corps de la carte (Contenu original conservé intact) */}
+              <div className="p-8 md:p-10 flex flex-col flex-grow">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="text-5xl text-orange-500 group-hover:scale-110 transition-transform duration-300">
+                    {item.icon}
+                  </div>
+                  
+                  {/* Badge d'état de stock ou prix */}
+                  <div className="flex flex-col items-end gap-2">
+                    <span className="px-4 py-1.5 bg-stone-50 dark:bg-stone-800 rounded-full text-amber-800 dark:text-amber-400 text-sm font-black shadow-sm border border-stone-100 dark:border-stone-700">
+                      {item.price}
+                    </span>
+                    <span className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded ${
+                      item.inStock ? "bg-green-100 text-green-800" : "bg-amber-150 text-amber-800"
+                    }`}>
+                      {item.inStock ? <FaCheckCircle /> : <FaExclamationTriangle />}
+                      {item.inStock ? "En stock" : "Sur commande"}
+                    </span>
+                  </div>
+                </div>
 
-              <p className="text-gray-600 dark:text-green-100/70 mb-6 text-lg leading-relaxed">
-                {service.description}
-              </p>
+                <h3 className="text-2xl font-black mb-4 text-stone-900 dark:text-white font-serif leading-tight">
+                  {item.title}
+                </h3>
+                
+                <p className="text-stone-600 dark:text-stone-300 mb-6 text-lg leading-relaxed">
+                  {item.description}
+                </p>
 
-              {/* Bloc Template / Approche */}
-              <div className="mb-6 p-5 bg-white dark:bg-green-900/50 rounded-3xl text-sm text-green-800 dark:text-lime-300 border border-green-100 dark:border-green-700">
-                <span className="block text-gray-400 dark:text-green-500 mb-2 uppercase tracking-widest text-[10px] font-bold">L'approche Verro BM :</span>
-                {service.template}
-              </div>
-
-              {/* Liste des bénéfices */}
-              <div className="mb-8 flex flex-wrap gap-2">
-                {service.benefits.map((b, i) => (
-                  <span key={i} className="flex items-center gap-1 bg-green-900 dark:bg-lime-500 text-white dark:text-green-950 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase tracking-wider">
-                    <FaCheckCircle className="text-[10px]" /> {b}
+                {/* Bloc Détails / Recettes / Composition */}
+                <div className="mb-6 p-5 bg-stone-50 dark:bg-stone-850 rounded-3xl text-sm text-stone-700 dark:text-stone-300 border border-stone-100 dark:border-stone-800">
+                  <span className="block text-stone-400 dark:text-stone-500 mb-2 uppercase tracking-widest text-[10px] font-bold">
+                    Détails & Conseils de dégustation :
                   </span>
-                ))}
-              </div>
+                  {item.details}
+                </div>
 
-              <div className="mt-auto space-y-3">
-                {/* Bouton Principal : Devis */}
-                <button
-                  onClick={() => handleQuoteClick(getServiceKey(service.title))}
-                  className="w-full py-4 bg-orange-600 text-white rounded-2xl font-black text-lg shadow-lg hover:bg-green-900 transition-all transform active:scale-95"
-                >
-                  Démarrer le Coaching
-                </button>
+                {/* Mots-clés / Caractéristiques */}
+                <div className="mb-8 flex flex-wrap gap-2">
+                  {item.tags.map((tag, i) => (
+                    <span 
+                      key={i} 
+                      className="flex items-center gap-1 bg-amber-950 dark:bg-amber-500 text-white dark:text-stone-950 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase tracking-wider"
+                    >
+                      <FaCheckCircle className="text-[10px]" /> {tag}
+                    </span>
+                  ))}
+                </div>
 
-                {/* Bouton Secondaire : Contact direct */}
-                <a
-                  href={`mailto:beverlymalu04@gmail.com?subject=Information sur le ${service.title}`}
-                  className="flex items-center justify-center gap-2 w-full py-3 border-2 border-green-900 dark:border-lime-500 text-green-900 dark:text-lime-500 rounded-2xl font-bold hover:bg-green-50 dark:hover:bg-green-800 transition-all duration-300"
-                >
-                  <FaEnvelope /> Échanger par Email
-                </a>
+                <div className="mt-auto space-y-3">
+                  {/* Bouton Principal : Commande immédiate via WhatsApp */}
+                  <button 
+                    onClick={() => handleWhatsAppOrder(item.title)} 
+                    className="w-full py-4 bg-orange-600 text-white rounded-2xl font-black text-lg shadow-lg hover:bg-amber-800 transition-all transform active:scale-95 flex items-center justify-center gap-2"
+                  >
+                    <FaWhatsapp size={22} /> Commander via WhatsApp
+                  </button>
+
+                  {/* Bouton Secondaire : Formulaire ou demande de devis sur mesure */}
+                 {item.price === "Sur Devis" && (
+  <button 
+    onClick={() => handleQuoteClick(item.title)} // ✅ Corrigé : On appelle la bonne fonction déclarée plus haut
+    className="w-full py-3 border-2 border-amber-900 dark:border-amber-500 text-amber-900 dark:text-amber-500 rounded-2xl font-bold hover:bg-amber-50 dark:hover:bg-stone-800 transition-all duration-300"
+  >
+    Demander un devis personnalisé
+  </button>
+)}
+
+                </div>
               </div>
             </div>
           ))}
         </div>
-
-        <QuoteModal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          defaultService={selectedService}
-        />
       </div>
     </section>
   );

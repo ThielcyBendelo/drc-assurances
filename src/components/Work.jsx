@@ -1,129 +1,173 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom'; 
-import { FaHandshake, FaGlobeAfrica, FaUsers, FaArrowRight } from 'react-icons/fa';
-import { GiEagleEmblem } from 'react-icons/gi';
+import { useNavigate } from 'react-router-dom';
+import { FaChartLine, FaMoneyBillWave, FaPercentage, FaWallet, FaArrowRight, FaDownload, FaPlusCircle } from 'react-icons/fa';
 
-const partenaires = [
+// Indicateurs clés de rentabilité M-DELICE Abidjan
+const indicateursFinanciers = [
   {
-    nom: "Secteur Public & Institutions",
-    description: "Collaboration avec les structures étatiques pour l'intégration de l'éveil civique dans les programmes.",
-    icon: <FaGlobeAfrica />,
-    couleur: "text-green-600"
+    nom: "Chiffre d'Affaires Brut",
+    description: "Total des ventes enregistrées sur la vitrine et les commandes spéciales (Cake Design).",
+    valeur: "4 250 000 FCFA",
+    icon: <FaChartLine />,
+    couleur: "text-amber-700 dark:text-amber-400"
   },
   {
-    nom: "Organisations Internationales",
-    description: "Partenariats stratégiques pour le financement et le déploiement du Projet VITE à grande échelle.",
-    icon: <FaHandshake />,
+    nom: "Coûts Matières (Food Cost)",
+    description: "Dépenses cumulées pour l'achat des ingrédients de laboratoire (Beurre AOP, Chocolat, Fruits).",
+    valeur: "1 450 000 FCFA",
+    icon: <FaMoneyBillWave />,
     couleur: "text-orange-500"
   },
   {
-    nom: "Universités & Centres de Recherche",
-    description: "Synergie intellectuelle pour adapter nos outils de coaching aux réalités de la jeunesse actuelle.",
-    icon: <FaUsers />,
-    couleur: "text-lime-500"
+    nom: "Marge Bénéficiaire Nette",
+    description: "Taux de rentabilité réel de l'atelier après déduction des charges et matières premières.",
+    valeur: "65.8 %",
+    icon: <FaPercentage />,
+    couleur: "text-emerald-600 dark:text-emerald-400"
   },
   {
-    nom: "Entreprises du Secteur Privé",
-    description: "Réseau d'associés business offrant du mentorat et des opportunités aux jeunes du Projet VITE.",
-    icon: <GiEagleEmblem />,
-    couleur: "text-green-800"
+    nom: "Trésorerie Disponible",
+    description: "Fonds liquides sécurisés disponibles pour les prochains réapprovisionnements.",
+    valeur: "2 800 000 FCFA",
+    icon: <FaWallet />,
+    couleur: "text-amber-900 dark:text-amber-500"
   }
 ];
 
-export default function Associes() {
-   const navigate = useNavigate();
+// Flux de caisse récent de l'atelier
+const transactionsRecentes = [
+  { id: 1, detail: "Acompte Pièce Montée Mariage (Riviera)", type: "credit", montant: "+250 000 F", date: "06/06/2026" },
+  { id: 2, detail: "Achat Beurre & Crème (Distri-Ivoire)", type: "debit", montant: "-180 000 F", date: "05/06/2026" },
+  { id: 3, detail: "Ventes du jour Comptoir (Viennoiseries)", type: "credit", montant: "+95 000 F", date: "04/06/2026" },
+  { id: 4, detail: "Commande Emballages & Boîtes Gâteaux", type: "debit", montant: "-60 000 F", date: "03/06/2026" },
+];
+
+export default function Finances() {
+  const navigate = useNavigate();
+  const [journalCaisse, setJournalCaisse] = useState(transactionsRecentes);
+
+  const handleExportData = () => {
+    // Logique d'exportation Excel / PDF comptable
+    alert("Génération et téléchargement du grand livre comptable (Format CSV)...");
+  };
+
   return (
-    <section id="work" className="py-24 px-6 bg-white dark:bg-green-950 transition-colors duration-500">
+    <section id="finances" className="py-28 px-6 bg-stone-50 dark:bg-stone-950 transition-colors duration-500">
       <div className="max-w-7xl mx-auto">
         
-        {/* En-tête de section */}
+        {/* 1. EN-TÊTE DU DASHBOARD FINANCIER */}
         <div className="text-center mb-20">
           <motion.span 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 10 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
             className="text-orange-500 font-black uppercase tracking-[0.3em] text-xs"
           >
-            S'unir pour bâtir
+            Suivi comptable & Rentabilité
           </motion.span>
           <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-black text-green-900 dark:text-white mt-4 tracking-tighter"
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            className="text-4xl md:text-6xl font-black text-stone-950 dark:text-white font-serif mt-4 tracking-tight"
           >
-            Mes <span className="text-lime-500">Associés</span> & Réalisations
+            Gestion <span className="text-amber-700 dark:text-amber-400">Financière</span>
           </motion.h2>
           <div className="h-1.5 w-24 bg-orange-500 mx-auto rounded-full mt-6"></div>
-          <p className="text-xl text-gray-600 dark:text-green-100/60 mt-8 max-w-3xl mx-auto leading-relaxed">
-            La transformation de notre société ne peut se faire seule. Voici les pôles d'expertise et les alliés qui soutiennent ma vision pour l'Afrique.
+          <p className="text-xl text-stone-600 dark:text-stone-300 mt-8 max-w-3xl mx-auto leading-relaxed">
+            Analysez la santé commerciale de la pâtisserie M-DELICE. Maîtrisez vos coûts d'exploitation et optimisez vos marges sur chaque entremet produit.
           </p>
         </div>
 
-        {/* Grille des Partenariats */}
-        <div className="grid gap-8 md:grid-cols-2">
-          {partenaires.map((partner, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, x: idx % 2 === 0 ? -30 : 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+        {/* 2. GRILLE DES MESURES ANALYTIQUES */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4 mb-16">
+          {indicateursFinanciers.map((indicator, idx) => (
+            <motion.div 
+              key={idx} 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              whileHover={{ y: -10 }}
-              className="group p-8 bg-green-50/50 dark:bg-green-900/30 rounded-[40px] border border-green-100 dark:border-green-800 hover:bg-white dark:hover:bg-green-900 hover:shadow-2xl transition-all duration-500"
+              whileHover={{ y: -5 }}
+              className="p-6 bg-white dark:bg-stone-900 rounded-[30px] border border-stone-100 dark:border-stone-800 shadow-xl flex flex-col justify-between"
             >
-              <div className="flex items-start gap-6">
-                <div className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white dark:bg-green-800 shadow-lg text-2xl ${partner.couleur} group-hover:scale-110 transition-transform`}>
-                  {partner.icon}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs uppercase text-stone-400 font-bold tracking-wider">
+                    {indicator.nom}
+                  </span>
+                  <div className={`text-2xl ${indicator.couleur}`}>
+                    {indicator.icon}
+                  </div>
                 </div>
-                
-                <div>
-                  <h3 className="text-2xl font-black text-green-900 dark:text-white mb-3">
-                    {partner.nom}
-                  </h3>
-                  <p className="text-gray-600 dark:text-green-100/70 leading-relaxed mb-6">
-                    {partner.description}
-                  </p>
-                  
-                  <button className="flex items-center gap-2 text-orange-500 font-bold text-sm uppercase tracking-widest hover:gap-4 transition-all">
-                    En savoir plus <FaArrowRight />
-                  </button>
-                </div>
+                <p className="text-2xl md:text-3xl font-black text-stone-950 dark:text-white font-sans">
+                  {indicator.valeur}
+                </p>
               </div>
+              <p className="text-xs text-stone-500 dark:text-stone-400 mt-4 leading-relaxed border-t border-stone-50 dark:border-stone-800 pt-3">
+                {indicator.description}
+              </p>
             </motion.div>
           ))}
         </div>
 
-        {/* Section de réassurance (Logo strip discret) */}
-        <div className="mt-24 pt-12 border-t border-gray-100 dark:border-green-800 flex flex-wrap justify-center items-center gap-12 opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
-           <p className="w-full text-center text-xs font-black uppercase tracking-[0.4em] text-gray-400 mb-4">Ils soutiennent le mouvement</p>
-           <span className="text-xl font-serif text-green-950 dark:text-white">COOPÉRATION X</span>
-           <span className="text-xl font-serif text-green-950 dark:text-white">INSTITUT Y</span>
-           <span className="text-xl font-serif text-green-950 dark:text-white">MINISTÈRE Z</span>
-           <span className="text-xl font-serif text-green-950 dark:text-white">FONDATION W</span>
+        {/* 3. HISTORIQUE DES ENTRÉES/SORTIES (JOURNAL DE CAISSE) */}
+        <div className="bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 rounded-[40px] p-6 md:p-10 shadow-xl">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <div>
+              <h3 className="text-2xl font-black text-stone-950 dark:text-white font-serif">Flux de Trésorerie Récent</h3>
+              <p className="text-xs text-stone-400 uppercase tracking-wider mt-1">Derniers encaissements et décaissements de l'atelier</p>
+            </div>
+            <button 
+              onClick={handleExportData}
+              className="px-5 py-2.5 bg-stone-100 dark:bg-stone-800 hover:bg-amber-800 hover:text-white text-stone-800 dark:text-stone-200 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all shadow-sm"
+            >
+              <FaDownload /> Exporter le rapport
+            </button>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-stone-100 dark:border-stone-800 text-[10px] uppercase text-stone-400 font-bold tracking-widest">
+                  <th className="pb-4">Date</th>
+                  <th className="pb-4">Libellé Transaction</th>
+                  <th className="pb-4 text-right">Montant</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-stone-50 dark:divide-stone-800 text-sm font-medium">
+                {journalCaisse.map((transac) => (
+                  <tr key={transac.id} className="text-stone-700 dark:text-stone-300 hover:bg-stone-50/50 dark:hover:bg-stone-800/30 transition-colors">
+                    <td className="py-4 text-xs font-mono text-stone-400">{transac.date}</td>
+                    <td className="py-4 font-serif text-base text-stone-900 dark:text-stone-100">{transac.detail}</td>
+                    <td className={`py-4 text-right font-black ${
+                      transac.type === 'credit' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500'
+                    }`}>
+                      {transac.montant}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-          {/* NOUVEAU : Bouton Lien vers les Partenaires */}
+        {/* 4. LIEN INTERNE COMPLEMENTAIRE */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+          initial={{ opacity: 0, y: 20 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
           className="mt-16 text-center"
         >
           <button 
-            onClick={() => navigate('/testimonials')} // Redirige vers votre page TeamSection que nous avons codée
-            className="group relative inline-flex items-center gap-3 px-8 py-4 bg-green-900 dark:bg-lime-500 text-white dark:text-green-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-orange-500 dark:hover:bg-white transition-all duration-300 shadow-xl"
+            onClick={() => navigate('/skills')} 
+            className="group relative inline-flex items-center gap-3 px-8 py-4 bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-orange-500 transition-all duration-300 shadow-xl"
           >
-            <FaUsers className="text-lime-400 dark:text-green-900 group-hover:text-white transition-colors" />
-            Voir nos Partenaires Officiels
+            <FaPlusCircle /> Ajuster les coûts depuis le stock
             <FaArrowRight className="group-hover:translate-x-2 transition-transform" />
-            
-            {/* Effet de brillance au survol */}
-            <div className="absolute inset-0 rounded-2xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           </button>
-          
-          <p className="mt-4 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-            Découvrez les experts qui nous accompagnent
+          <p className="mt-4 text-[10px] text-stone-400 font-bold uppercase tracking-widest">
+            Vérifiez l'impact des variations du prix des ingrédients sur vos bénéfices
           </p>
         </motion.div>
+
       </div>
     </section>
   );

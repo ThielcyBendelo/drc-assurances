@@ -3,41 +3,42 @@ import { FaChevronDown, FaQuestionCircle } from "react-icons/fa";
 
 const faqs = [
   {
-    question: "À qui s'adresse votre accompagnement de coaching ?",
-    answer: "Mon coaching s'adresse principalement aux jeunes congolais et africains désireux de prendre conscience de leur potentiel, de déconstruire les complexes et de devenir des acteurs du changement dans leur société.",
+    question: "Quel est le délai pour commander un gâteau sur mesure (Cake Design) ?",
+    answer: "Pour les gâteaux d'anniversaire personnalisés et le Cake Design, nous recommandons de passer commande au moins 3 à 5 jours à l'avance. Pour les pièces montées de mariage et grands événements à Abidjan, un délai de 2 semaines est idéal pour garantir une création parfaite.",
   },
   {
-    question: "Où peut-on se procurer vos ouvrages ?",
-    answer: "Mes livres sont disponibles dans les principales librairies de Kinshasa, ainsi qu'en commande directe via ce site web. Nous proposons également des versions numériques pour la diaspora.",
+    question: "Livrez-vous dans toutes les communes d'Abidjan ?",
+    answer: "Oui, nous livrons vos douceurs dans toutes les communes d'Abidjan (Cocody, Marcory, Zone 4, Riviera, Yopougon, Plateau, etc.). Nos livraisons sont effectuées en véhicule climatisé pour garantir la fraîcheur et l'état impeccable de vos gâteaux jusqu'à votre table.",
   },
   {
-    question: "Qu'est-ce que le projet VITE concrètement ?",
-    answer: "Le projet VITE est une initiative entrepreneuriale visant à transformer la théorie en action immédiate. Il propose des solutions concrètes pour l'autonomisation et la résilience sur le terrain africain.",
+    question: "Proposez-vous des options sans gluten ou allégées en sucre ?",
+    answer: "Absolument. Chez M-DELICE, nous tenons à ce que tout le monde puisse se faire plaisir. Nous concevons sur demande des entremets et gâteaux d'anniversaire adaptés à vos exigences alimentaires (sans gluten, sans lactose ou avec index glycémique réduit).",
   },
   {
-    question: "Proposez-vous des conférences ou des ateliers de groupe ?",
-    answer: "Absolument. J'interviens dans les universités, les institutions et les entreprises pour des conférences inspirantes et des ateliers pratiques sur le leadership et la prise de conscience.",
+    question: "Gérez-vous le service traiteur sucré pour les événements d'entreprise ?",
+    answer: "Oui, nous proposons des formules sur mesure pour les professionnels à Abidjan : buffets de mignardises, pauses-café avec mini-viennoiseries de prestige, et gâteaux corporate logotés pour vos lancements de produits ou anniversaires d'entreprise.",
   },
   {
-    question: "Comment prendre rendez-vous pour une séance de coaching ?",
-    answer: "Il vous suffit de cliquer sur le bouton 'Me contacter' ou d'utiliser le formulaire en bas de page. Mon équipe vous répondra sous 24h pour fixer un premier échange.",
+    question: "Comment puis-je valider ma commande et payer ?",
+    answer: "Vous pouvez commander directement via la vitrine de ce site web. Pour les gâteaux sur mesure, un échange via WhatsApp ou un dépôt à notre atelier valide la commande. Nous acceptons les paiements par Mobile Money (Orange, Wave, MTN), cartes bancaires et espèces.",
   },
 ];
 
 function FAQSection() {
   return (
-    <section className="py-24 px-4 bg-gray-50" id="faq">
+    <section className="py-24 px-4 bg-white dark:bg-stone-950" id="faq">
       <div className="max-w-4xl mx-auto">
+        
         {/* En-tête de la section */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center p-3 bg-lime-100 text-lime-600 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center p-3 bg-amber-100 text-amber-700 rounded-full mb-4">
             <FaQuestionCircle size={24} />
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-green-900 mb-4 uppercase tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-black text-amber-950 font-serif mb-4 uppercase tracking-tight">
             Foire Aux Questions
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Vous avez des questions sur mon approche ou mes projets ? Voici les réponses aux interrogations les plus fréquentes.
+          <p className="text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
+            Des questions sur nos créations gourmandes, nos livraisons à Abidjan ou vos commandes personnalisées ? Retrouvez toutes nos réponses.
           </p>
         </div>
 
@@ -46,15 +47,15 @@ function FAQSection() {
           {faqs.map((faq, idx) => (
             <details 
               key={idx} 
-              className="group bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md"
+              className="group bg-white rounded-3xl shadow-sm border border-stone-100 overflow-hidden transition-all duration-300 hover:shadow-md"
             >
-              <summary className="flex items-center justify-between font-bold text-green-900 cursor-pointer p-6 list-none">
+              <summary className="flex items-center justify-between font-bold text-amber-950 font-serif cursor-pointer p-6 list-none select-none">
                 <span className="text-lg md:text-xl pr-4">{faq.question}</span>
                 <div className="text-orange-500 transition-transform duration-300 group-open:rotate-180">
                   <FaChevronDown />
                 </div>
               </summary>
-              <div className="px-6 pb-6 text-gray-600 text-lg leading-relaxed border-t border-gray-50 pt-4">
+              <div className="px-6 pb-6 text-stone-600 text-lg leading-relaxed border-t border-stone-50 pt-4">
                 {faq.answer}
               </div>
             </details>
@@ -62,16 +63,17 @@ function FAQSection() {
         </div>
 
         {/* CTA d'aide supplémentaire */}
-        <div className="mt-12 text-center p-8 bg-green-900 rounded-[40px] text-white shadow-2xl">
-          <h3 className="text-xl font-bold mb-2">Vous n'avez pas trouvé votre réponse ?</h3>
-          <p className="text-green-200 mb-6 italic">Je suis à votre écoute pour toute demande particulière.</p>
+        <div className="mt-12 text-center p-8 bg-amber-950 rounded-[40px] text-white shadow-2xl">
+          <h3 className="text-xl font-bold mb-2">Une demande spécifique pour un événement ?</h3>
+          <p className="text-amber-200 mb-6 italic">Notre équipe d'artisans pâtissiers est à votre entière disposition.</p>
           <button 
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-8 py-3 bg-orange-500 hover:bg-orange-400 text-white rounded-full font-bold transition-colors"
+            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} 
+            className="px-8 py-3 bg-orange-500 hover:bg-orange-400 text-white rounded-full font-bold transition-colors shadow-md hover:shadow-orange-500/20"
           >
-            Posez votre question
+            Contactez notre atelier
           </button>
         </div>
+
       </div>
     </section>
   );
