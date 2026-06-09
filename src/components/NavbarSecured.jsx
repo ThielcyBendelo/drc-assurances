@@ -127,6 +127,7 @@ const handleGiftClick = () => {
     { href: '/', label: 'Accueil', icon: <FaHome /> },
     { href: '/services', label: 'Notre Vitrine', icon: <FaUtensils /> },
     { href: '/projects', label: 'Cake Design', icon: <FaBirthdayCake /> },
+    { href: '/boutique', label: 'Notre Boutique', icon: <FaBirthdayCake /> },
   ];
 
   // Si l'utilisateur est connecté, on injecte dynamiquement la gestion de stock et financière
@@ -139,11 +140,11 @@ const handleGiftClick = () => {
 
   return (
     <>
-      {/* STRUCTURE GLOBALE ENVELOPPANTE DE FIXATION */}
+      {/* STRUCTURE GLOBALE ENVELOPPANTE DE FIXATION
       <div className="fixed top-0 left-0 right-0 z-[100] flex flex-col w-full shadow-sm">
         
         {/* NOUVEAUTÉ : PREMIÈRE NAVBAR SUPÉRIEURE (Bandeau d'annonces comme l'image modèle) */}
-        <div className={`w-full transition-all duration-300 bg-amber-100 dark:bg-stone-950 text-stone-800 dark:text-stone-200 border-b border-amber-200/50 dark:border-stone-800 text-xs md:text-sm font-medium px-4 py-2.5 flex items-center justify-between overflow-hidden ${
+        {/* <div className={`w-full transition-all duration-300 bg-amber-100 dark:bg-stone-950 text-stone-800 dark:text-stone-200 border-b border-amber-200/50 dark:border-stone-800 text-xs md:text-sm font-medium px-4 py-2.5 flex items-center justify-between overflow-hidden ${
           isSticky ? 'h-0 py-0 opacity-0 border-b-0 pointer-events-none' : 'h-auto opacity-100'
         }`}>
           <div className="max-w-7xl mx-auto w-full flex items-center justify-between gap-4">
@@ -158,7 +159,7 @@ const handleGiftClick = () => {
               Découvrir
             </button>
           </div>
-        </div>
+        </div> */} 
 
         {/* DEUXIÈME NAVBAR PRINCIPALE (STICKY AVEC STYLE DE VAGUE SUR MESURE) */}
         <nav className={`w-full transition-all duration-300 border-b border-stone-100 dark:border-stone-800 shadow-sm ${
@@ -332,7 +333,7 @@ const handleGiftClick = () => {
             )}
           </AnimatePresence>
         </nav>
-      </div>
+      {/* </div> */}
     </>
   );
 }

@@ -7,7 +7,6 @@ import { ThemeProvider } from './contexts/ThemeContext.jsx';
 import Home from './pages/Home';
 import ServicesPage from './pages/ServicesPage';
 import ContactPage from './pages/ContactPage';
-import AboutPage from './pages/AboutPage';
 import ExperiencePage from './pages/ExperiencePage';
 import ProjectsPage from './pages/ProjectsPage';
 import SkillsPage from './pages/SkillsPage';
@@ -20,6 +19,8 @@ import ClientRegistrationPage from './pages/ClientRegistrationPage';
 import ProfessionalSplashScreen from './components/ProfessionalSplashScreen';
 import SecureLogin from './components/SecureLogin';
 import SecureRegister from './components/SecureRegister';
+import BoutiquePage from './pages/BoutiquePage';
+
 // Dashboard imports
 import {
   Login,
@@ -51,12 +52,12 @@ const App = () => {
             <Routes>
               {/* Route principale du site */}
               <Route path="/" element={<Home />} />
+              {/* Route Boutique */}
+              <Route path="/boutique" element={<BoutiquePage />} /> 
               {/* Route Services */}
               <Route path="/services" element={<ServicesPage />} />
               {/* Route Contact */}
               <Route path="/contact" element={<ContactPage />} />
-              {/* Route About */}
-              <Route path="/about" element={<AboutPage />} />
               {/* Route Experience */}
               <Route path="/experience" element={<ExperiencePage />} />
               {/* Route Projects */}
