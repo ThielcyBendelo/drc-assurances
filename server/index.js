@@ -38,6 +38,26 @@ async function initializeDatabase() {
 }
 initializeDatabase();
 
+// =========================================================================
+// 🌐 ACCUEIL ET DIAGNOSTICS DE L'ÉCOSYSTÈME
+// =========================================================================
+
+// ✅ AJOUTÉ : Route d'accueil racine pour éliminer définitivement le "Cannot GET /"
+app.get('/', (req, res) => {
+    res.send(`
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 60px 20px; background-color: #0f172a; color: #f8fafc; min-h-screen: 100vh;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #1e293b; padding: 40px; rounded-top: 16px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-bottom: 4px solid #00A3E0;">
+                <h1 style="color: #00A3E0; margin-bottom: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;">DRC Assurances</h1>
+                <h3 style="color: #94a3b8; font-weight: 600; margin-top: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Console Passerelle API</h3>
+                <hr style="border: 0; border-top: 1px solid #334155; margin: 25px 0;" />
+                <p style="color: #cbd5e1; font-size: 16px; line-height: 1.6;">Le serveur API de production est actuellement <span style="color: #10b981; font-weight: bold;">En Ligne</span> et s'exécute de manière sécurisée.</p>
+                <p style="color: #64748b; font-size: 12px; margin-bottom: 30px;">Réglementation et conformité sous la supervision de l'ARCA.</p>
+                <a href="/api/status" style="display: inline-block; padding: 12px 24px; background-color: #00A3E0; color: #ffffff; text-decoration: none; font-weight: bold; border-radius: 8px; font-size: 14px; transition: background 0.2s;">Vérifier le statut système</a>
+            </div>
+        </div>
+    `);
+});
+
 // Route de test d'intégrité de l'écosystème
 app.get('/api/status', (req, res) => {
     res.json({ status: "En ligne", system: "DRC Assurances API", compliance: "ARCA" });
