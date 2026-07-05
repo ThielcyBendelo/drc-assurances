@@ -1,44 +1,47 @@
 import React from "react";
-import { FaChevronDown, FaQuestionCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // ⚡ FIX : Import du système de navigation
+import { FaChevronDown, FaQuestionCircle, FaShieldAlt } from "react-icons/fa";
 
 const faqs = [
   {
-    question: "Quel est le délai pour commander un gâteau sur mesure (Cake Design) ?",
-    answer: "Pour les gâteaux d'anniversaire personnalisés et le Cake Design, nous recommandons de passer commande au moins 3 à 5 jours à l'avance. Pour les pièces montées de mariage et grands événements à Abidjan, un délai de 2 semaines est idéal pour garantir une création parfaite.",
+    question: "Comment fonctionne l'achat d'assurance pour un proche en RDC depuis l'étranger ?",
+    answer: "C'est très simple. Depuis notre plateforme (Espace Diaspora), vous sélectionnez la formule adaptée (Santé, Auto, Scolaire), vous renseignez les coordonnées de votre bénéficiaire en RDC et vous payez par carte bancaire. Votre proche reçoit instantanément sa carte virtuelle par WhatsApp/SMS.",
   },
   {
-    question: "Livrez-vous dans toutes les communes d'Abidjan ?",
-    answer: "Oui, nous livrons vos douceurs dans toutes les communes d'Abidjan (Cocody, Marcory, Zone 4, Riviera, Yopougon, Plateau, etc.). Nos livraisons sont effectuées en véhicule climatisé pour garantir la fraîcheur et l'état impeccable de vos gâteaux jusqu'à votre table.",
+    question: "DRC Assurances est-elle agréée par les autorités de régulation ?",
+    answer: "Absolument. Chez DRC Assurances, toutes nos offres et nos partenaires assureurs opèrent en stricte conformité avec la législation locale et bénéficient des agréments officiels de l'ARCA (Autorité de Régulation et de Contrôle des Assurances en RDC).",
   },
   {
-    question: "Proposez-vous des options sans gluten ou allégées en sucre ?",
-    answer: "Absolument. Chez M-DELICE, nous tenons à ce que tout le monde puisse se faire plaisir. Nous concevons sur demande des entremets et gâteaux d'anniversaire adaptés à vos exigences alimentaires (sans gluten, sans lactose ou avec index glycémique réduit).",
+    question: "Quels sont les moyens de paiement acceptés pour la Diaspora et en RDC ?",
+    answer: "Pour la diaspora (Europe, Amérique, Asie), nous acceptons les paiements sécurisés par Carte Bancaire, Stripe et PayPal. Pour les usagers locaux ou les renouvellements en RDC, la plateforme intègre les principaux réseaux de Mobile Money (M-Pesa, Orange Money, Airtel Money).",
   },
   {
-    question: "Gérez-vous le service traiteur sucré pour les événements d'entreprise ?",
-    answer: "Oui, nous proposons des formules sur mesure pour les professionnels à Abidjan : buffets de mignardises, pauses-café avec mini-viennoiseries de prestige, et gâteaux corporate logotés pour vos lancements de produits ou anniversaires d'entreprise.",
+    question: "Comment le bénéficiaire à Kinshasa peut-il se faire soigner ou utiliser son assurance ?",
+    answer: "Lorsqu'il se rend dans l'un de nos hôpitaux ou centres médicaux partenaires, le bénéficiaire présente simplement son numéro de police ou le QR Code reçu sur son téléphone. L'établissement vérifie ses droits en temps réel sur son portail et prend le patient en charge sans frais avancés, dans la limite de son plafond.",
   },
   {
-    question: "Comment puis-je valider ma commande et payer ?",
-    answer: "Vous pouvez commander directement via la vitrine de ce site web. Pour les gâteaux sur mesure, un échange via WhatsApp ou un dépôt à notre atelier valide la commande. Nous acceptons les paiements par Mobile Money (Orange, Wave, MTN), cartes bancaires et espèces.",
+    question: "Quel est le délai de traitement en cas de sinistre ou d'accident ?",
+    answer: "Les télé-déclarations de sinistres s'effectuent directement depuis l'application en téléchargeant les justificatifs (photos, ordonnances). Notre équipe analyse le dossier sous 24 à 48 heures, et les indemnisations ou règlements aux prestataires s'exécutent en moins de 7 jours ouvrés.",
   },
 ];
 
 function FAQSection() {
+  const navigate = useNavigate(); // ⚡ FIX : Initialisation du hook de navigation
+
   return (
-    <section className="py-24 px-4 bg-white dark:bg-stone-950" id="faq">
+    <section className="py-24 px-4 bg-slate-50 dark:bg-slate-950" id="faq">
       <div className="max-w-4xl mx-auto">
         
-        {/* En-tête de la section */}
+        {/* En-tête de la section aux couleurs de la RDC */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center p-3 bg-amber-100 text-amber-700 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center p-3 bg-[#00A3E0]/10 text-[#00A3E0] rounded-full mb-4">
             <FaQuestionCircle size={24} />
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-amber-950 font-serif mb-4 uppercase tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white font-serif mb-4 uppercase tracking-tight">
             Foire Aux Questions
           </h2>
-          <p className="text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
-            Des questions sur nos créations gourmandes, nos livraisons à Abidjan ou vos commandes personnalisées ? Retrouvez toutes nos réponses.
+          <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            Des questions sur nos couvertures, le tunnel de paiement de la diaspora ou le réseau d'hôpitaux partenaires en RDC ? Retrouvez toutes nos réponses.
           </p>
         </div>
 
@@ -47,30 +50,35 @@ function FAQSection() {
           {faqs.map((faq, idx) => (
             <details 
               key={idx} 
-              className="group bg-white rounded-3xl shadow-sm border border-stone-100 overflow-hidden transition-all duration-300 hover:shadow-md"
+              className="group bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden transition-all duration-300 hover:shadow-md"
             >
-              <summary className="flex items-center justify-between font-bold text-amber-950 font-serif cursor-pointer p-6 list-none select-none">
-                <span className="text-lg md:text-xl pr-4">{faq.question}</span>
-                <div className="text-orange-500 transition-transform duration-300 group-open:rotate-180">
+              <summary className="flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 cursor-pointer p-6 list-none select-none">
+                <span className="text-base md:text-lg pr-4">{faq.question}</span>
+                <div className="text-[#00A3E0] dark:text-[#FDD100] transition-transform duration-300 group-open:rotate-180">
                   <FaChevronDown />
                 </div>
               </summary>
-              <div className="px-6 pb-6 text-stone-600 text-lg leading-relaxed border-t border-stone-50 pt-4">
+              <div className="px-6 pb-6 text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed border-t border-slate-50 dark:border-slate-800/50 pt-4">
                 {faq.answer}
               </div>
             </details>
           ))}
         </div>
 
-        {/* CTA d'aide supplémentaire */}
-        <div className="mt-12 text-center p-8 bg-amber-950 rounded-[40px] text-white shadow-2xl">
-          <h3 className="text-xl font-bold mb-2">Une demande spécifique pour un événement ?</h3>
-          <p className="text-amber-200 mb-6 italic">Notre équipe d'artisans pâtissiers est à votre entière disposition.</p>
+        {/* CTA d'aide institutionnelle */}
+        <div className="mt-12 text-center p-8 bg-gradient-to-br from-[#0C1E36] to-[#11294A] rounded-2xl text-white shadow-xl relative overflow-hidden border-b-4 border-[#00A3E0]">
+          <div className="absolute -right-10 -bottom-10 opacity-10 text-white pointer-events-none">
+            <FaShieldAlt size={200} />
+          </div>
+          <h3 className="text-xl font-bold mb-2 relative z-10">Besoin d'une formule sur-mesure pour votre entreprise ?</h3>
+          <p className="text-slate-300 mb-6 italic text-sm md:text-base relative z-10">Nos conseillers techniques ARCA sont disponibles pour concevoir vos contrats Flotte ou Santé Collective.</p>
+          
+          {/* ⚡ FIX : onClick modifié pour rediriger vers la route configurée dans App.jsx */}
           <button 
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} 
-            className="px-8 py-3 bg-orange-500 hover:bg-orange-400 text-white rounded-full font-bold transition-colors shadow-md hover:shadow-orange-500/20"
+            onClick={() => navigate('/urgences-contact')} 
+            className="px-8 py-3 bg-[#00A3E0] hover:bg-[#0082B3] text-white rounded-xl font-bold transition-all shadow-md transform hover:scale-105 relative z-10"
           >
-            Contactez notre atelier
+            Contacter un conseiller RDC
           </button>
         </div>
 

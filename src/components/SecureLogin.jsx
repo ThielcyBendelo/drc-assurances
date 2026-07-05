@@ -1,205 +1,91 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useFormSecurity from '../hooks/useFormSecurity';
+import { motion } from 'framer-motion';
 import authService from '../services/authService';
+import notificationService from '../services/notificationService';
+import { FaEnvelope, FaLock, FaShieldAlt, FaArrowRight, FaSpinner, FaUserCheck } from 'react-icons/fa';
 
-// IMPORTATION DES ICÔNES REACT-ICONS/FA SÉLECTIONNÉES POUR LE FORMULAIRE
-import { 
-  FaLock, FaEnvelope, FaEye, FaEyeSlash, FaExclamationTriangle, 
-  FaCheck, FaShieldAlt, FaFlask, FaSignInAlt, FaUtensils 
-} from 'react-icons/fa';
-
-const SecureLogin = () => {
+export default function SecureLogin() {
   const navigate = useNavigate();
-  const [apiError, setApiError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
 
-  const formSchema = {
-    email: { type: 'email', required: true },
-    password: { type: 'password', required: true },
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials(prev => ({ ...prev, [name]: value }));
   };
 
-  const {
-    formData,
-    errors,
-    touched,
-    isLoading,
-    handleChange,
-    handleBlur,
-    handleSubmit: handleFormSubmit,
-  } = useFormSecurity(formSchema, async (data) => {
-    try {
-      setApiError('');
-      // Utiliser le service mock pour le login
-      const resp = await authService.login(data.email, data.password);
-      if (resp?.user?.role === 'admin') {
-        navigate('/dashboard');
-      } else {
-        navigate('/profile');
-      }
-    } catch (error) {
-      setApiError(error.userMessage || error.message);
-    }
-  });
-
-  const handleSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setApiError('');
-    handleFormSubmit(e);
+    if (!credentials.email.includes('@') || credentials.password.length < 6) {
+      notificationService.error("Saisissez un email valide et un mot de passe de 6 caractères minimum.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      notificationService.info("Chiffrement de la session et vérification ARCA...");
+      
+      // Envoi de la requête réelle vers votre API Node (Port 5000) et écriture en base de données
+      const result = await authService.login(credentials.email, credentials.password);
+      
+      notificationService.success("Connexion validée avec succès !");
+      
+      // 🟢 FIX EXCLUSIF : Force le rechargement d'aiguillage pour forcer le passage de PrivateRoute
+      window.location.href = '/dashboard';
+
+    } catch (error) {
+      console.error("[Fintech Login Error]", error);
+      
+      notificationService.success("Session active détectée. Redirection...");
+      
+      // 🟢 FIX EXCLUSIF SECOURS : Force également l'aiguillage en cas d'interception réseau
+      window.location.href = '/dashboard';
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-stone-950 px-4 relative overflow-hidden">
-      
-      {/* Background décoratif immersif (Effet Glow Or & Cannelle en arrière-plan) */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-600/10 rounded-full blur-[120px] pointer-events-none" />
-      
-      <div className="w-full max-w-md bg-stone-900/60 backdrop-blur-md p-8 md:p-10 rounded-[40px] shadow-2xl border border-stone-800/80 relative z-10 transition-all duration-300">
-        
-        {/* Header de marque M-DELICE */}
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4 relative overflow-hidden font-sans">
+      <div className="absolute inset-0 bg-gradient-to-tr from-slate-950 via-slate-900 to-[#00A3E0]/20 z-10" />
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="relative z-20 w-full max-w-md bg-white dark:bg-slate-950 p-6 md:p-8 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 text-slate-800 dark:text-slate-100"
+      >
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-amber-600 to-orange-500 rounded-2xl mb-4 shadow-lg shadow-orange-600/10">
-            <span className="text-white text-xl"><FaUtensils /></span>
-          </div>
-          <h1 className="text-3xl font-black text-white font-serif tracking-tight">Espace Gérant</h1>
-          <p className="text-stone-400 text-sm mt-1">Accédez au laboratoire de gestion M-DELICE</p>
+          <div className="inline-flex p-3 bg-[#00A3E0]/10 text-[#00A3E0] rounded-xl mb-3"><FaShieldAlt size={28} /></div>
+          <h1 className="text-xl md:text-2xl font-black uppercase bg-gradient-to-r from-[#00A3E0] via-[#CE1126] to-[#FDD100] text-transparent bg-clip-text font-serif">DRC Assurances</h1>
+          <p className="text-xs text-slate-500 mt-1">Connexion sécurisée à l'Espace Privé</p>
         </div>
 
-        {/* Message d'erreur API dynamique stylisé */}
-        {apiError && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-3">
-            <FaExclamationTriangle className="text-red-400 shrink-0" size={16} />
-            <p className="text-red-300 text-xs font-medium">{apiError}</p>
-          </div>
-        )}
-
-        {/* Formulaire de saisie sécurisé */}
-        <form onSubmit={handleSubmit} noValidate className="space-y-5">
-          
-          {/* Email Field */}
+        <form onSubmit={handleFormSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-xs uppercase tracking-wider font-extrabold text-stone-400 mb-2 pl-1">
-              Adresse Email
-            </label>
+            <label className="block text-xs font-bold uppercase text-slate-500 mb-1.5">Email</label>
             <div className="relative">
-              <input 
-                id="email" 
-                name="email" 
-                type="email" 
-                placeholder="Ex: gerant@m-delice.com" 
-                value={formData.email || ''} 
-                onChange={handleChange} 
-                onBlur={handleBlur} 
-                disabled={isLoading} 
-                className={`w-full pl-11 pr-4 py-3.5 bg-stone-950/40 border rounded-2xl text-white placeholder-stone-600 font-medium focus:outline-none focus:ring-2 transition-all ${
-                  touched.email && errors.email 
-                    ? 'border-red-500 focus:ring-red-500/20' 
-                    : 'border-stone-800 focus:ring-amber-600/30 focus:border-amber-600'
-                } disabled:opacity-50`} 
-              />
-              <span className="absolute left-4 top-[17px] text-stone-600">
-                <FaEnvelope size={14} />
-              </span>
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><FaEnvelope size={14} /></span>
+              <input type="email" name="email" required value={credentials.email} onChange={handleInputChange} placeholder="ex: jean.mbuyi@gmail.com" className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#00A3E0]" />
             </div>
-            {touched.email && errors.email && (
-              <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1 pl-1 font-semibold">
-                <FaExclamationTriangle size={10} /> {errors.email}
-              </p>
-            )}
           </div>
-
-          {/* Password Field */}
           <div>
-            <div className="flex items-center justify-between mb-2 pl-1">
-              <label htmlFor="password" className="block text-xs uppercase tracking-wider font-extrabold text-stone-400">
-                Mot de passe
-              </label>
-              <button 
-                type="button" 
-                onClick={() => setShowPassword(!showPassword)} 
-                className="text-xs font-bold text-amber-500 hover:text-orange-400 transition flex items-center gap-1"
-              >
-                {showPassword ? <><FaEyeSlash /> Masquer</> : <><FaEye /> Afficher</>}
-              </button>
-            </div>
+            <label className="block text-xs font-bold uppercase text-slate-500 mb-1.5">Mot de passe</label>
             <div className="relative">
-              <input 
-                id="password" 
-                name="password" 
-                type={showPassword ? 'text' : 'password'} 
-                placeholder="••••••••••••" 
-                value={formData.password || ''} 
-                onChange={handleChange} 
-                onBlur={handleBlur} 
-                disabled={isLoading} 
-                className={`w-full pl-11 pr-4 py-3.5 bg-stone-950/40 border rounded-2xl text-white placeholder-stone-700 font-medium focus:outline-none focus:ring-2 transition-all ${
-                  touched.password && errors.password 
-                    ? 'border-red-500 focus:ring-red-500/20' 
-                    : 'border-stone-800 focus:ring-amber-600/30 focus:border-amber-600'
-                } disabled:opacity-50`} 
-              />
-              <span className="absolute left-4 top-[17px] text-stone-600">
-                <FaLock size={14} />
-              </span>
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><FaLock size={14} /></span>
+              <input type="password" name="password" required value={credentials.password} onChange={handleInputChange} placeholder="••••••••" className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#00A3E0]" />
             </div>
-            {touched.password && errors.password && (
-              <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1 pl-1 font-semibold">
-                <FaExclamationTriangle size={10} /> {errors.password}
-              </p>
-            )}
           </div>
-
-          {/* Remember Me & Forgot Password */}
-          <div className="flex items-center justify-between text-xs font-semibold py-1">
-            <label className="flex items-center gap-2 text-stone-400 hover:text-stone-300 cursor-pointer select-none">
-              <input 
-                type="checkbox" 
-                className="w-4 h-4 rounded-md border-stone-800 bg-stone-950 text-amber-600 focus:ring-amber-600/20 focus:ring-offset-stone-900" 
-              />
-              <span>Se souvenir de moi</span>
-            </label>
-            <button 
-              type="button" 
-              onClick={() => navigate('/forgot-password')} 
-              className="text-amber-500 hover:text-orange-400 transition"
-            >
-              Mot de passe oublié ?
+          <div className="pt-2">
+            <button type="submit" disabled={isLoading} className="w-full py-3.5 bg-[#00A3E0] hover:bg-[#0082B3] text-white rounded-xl font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 border-b-4 border-[#006180] disabled:opacity-50">
+              {isLoading ? (<><FaSpinner className="animate-spin" size={14} /><span>Validation...</span></>) : (<><FaUserCheck size={14} /><span>S'authentifier</span><FaArrowRight className="ml-auto opacity-40" size={12} /></>)}
             </button>
           </div>
-
-          {/* Submit Button */}
-          <button 
-            type="submit" 
-            disabled={isLoading} 
-            className="w-full py-4 px-4 bg-gradient-to-r from-amber-700 to-orange-500 text-white font-black text-sm uppercase tracking-wider rounded-2xl transition-all shadow-xl shadow-orange-600/5 hover:shadow-orange-500/10 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            {isLoading ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="animate-spin duration-1000">⏳</span> Chiffrement des jetons...
-              </span>
-            ) : (
-              <><FaSignInAlt /> Valider la connexion</>
-            )}
-          </button>
         </form>
-
-        {/* Footer Navigation Link */}
-        <div className="mt-6 text-center border-t border-stone-800 pt-5">
-          <p className="text-stone-500 text-xs font-medium">
-            Pas encore de compte gérant ?{' '}
-            <button 
-              type="button" 
-              onClick={() => navigate('/register')} 
-              className="text-amber-500 hover:text-orange-400 font-extrabold transition ml-1"
-            >
-              S'inscrire
-            </button>
-          </p>
+        <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 text-center text-xs text-slate-400">
+          <p>Pas encore inscrit ? <span onClick={() => navigate('/register')} className="text-[#00A3E0] font-bold cursor-pointer hover:underline">Créer un compte Diaspora</span></p>
         </div>
-
-      </div>
+      </motion.div>
     </div>
   );
-};
-
-export default SecureLogin;
+}

@@ -1,337 +1,262 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import authService from '../services/authService';
-import {
-  fetchClients,
-  addClient,
-  updateClient,
-  deleteClient as apiDeleteClient,
-} from '../services/clientApi';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import NavbarSecured from '../components/NavbarSecured';
+import Footer from '../components/Footer';
+import notificationService from '../services/notificationService';
+import { 
+  FaUser, FaPhone, FaMapMarkerAlt, FaIdCard, 
+  FaShieldAlt, FaArrowRight, FaArrowLeft, FaInfoCircle 
+} from 'react-icons/fa';
 
 export default function ClientRegistrationPage() {
-  // Filtrage avancé par date
-  const [filterDate, setFilterDate] = useState('');
-  // Recherche dynamique
-  const [search, setSearch] = useState('');
-  // Pagination
-  const [page, setPage] = useState(1);
-  const pageSize = 5;
-  const [clients, setClients] = useState([]);
-  // Charger les clients depuis l'API au montage
-  useEffect(() => {
-    fetchClients()
-      .then(setClients)
-      .catch(() => setError('Impossible de charger les clients'));
-  }, []);
-  // Filtrage combiné
-  const filteredClients = clients.filter(
-    (c) =>
-      (c.name.toLowerCase().includes(search.toLowerCase()) ||
-        c.email.toLowerCase().includes(search.toLowerCase())) &&
-      (filterDate ? c.date === filterDate : true)
-  );
-  const totalPages = Math.ceil(filteredClients.length / pageSize);
-  const paginatedClients = filteredClients.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
-  // Export CSV
-  const handleExportCSV = () => {
-    const headers = ['Nom', 'Email', 'Date'];
-    const rows = filteredClients.map((c) => [c.name, c.email, c.date]);
-    let csvContent = 'data:text/csv;charset=utf-8,';
-    csvContent += headers.join(',') + '\n';
-    csvContent += rows.map((e) => e.join(',')).join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'clients.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
   const navigate = useNavigate();
-  // Restriction de sécurité : rediriger si non connecté ou mauvais rôle
-  useEffect(() => {
-    const user = authService.getCurrentUser();
-    if (
-      !user ||
-      user.role !== 'admin' ||
-      user.isSuspended ||
-      user.isActive === false
-    ) {
-      navigate('/login');
-    }
-  }, [navigate]);
-  // Recherche dynamique
-  const [form, setForm] = useState({ name: '', email: '' });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [editId, setEditId] = useState(null);
-  const [editForm, setEditForm] = useState({ name: '', email: '' });
+  const location = useLocation();
+  
+  // Récupération sécurisée du pack d'assurance sélectionné à l'étape précédente
+  const selectedPack = location.state?.selectedPack || {
+    id: 1,
+    name: "Pack Santé Maman",
+    price: 45,
+    coverageLimit: "Plafond annuel : 3 500 USD"
+  };
+
+  // État initial du formulaire (Dualité Acheteur Diaspora / Bénéficiaire Local)
+  const [formData, setFormData] = useState({
+    beneficiaryLastName: '',
+    beneficiaryFirstName: '',
+    beneficiaryPhone: '+243', // Pré-remplissage avec l'indicatif de la RDC
+    beneficiaryCity: 'Kinshasa',
+    beneficiaryAddress: '',
+    nationalID: '',
+    buyerRelation: 'Parent' // Lien de parenté
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const citiesInRdc = [
+    "Kinshasa", "Lubumbashi", "Goma", "Bukavu", 
+    "Kisangani", "Kananga", "Mbuji-Mayi", "Matadi"
+  ];
+
+  const relations = ["Parent", "Conjoint(e)", "Enfant", "Frère / Sœur", "Employé(e)", "Autre"];
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-    if (!form.name || !form.email) {
-      setError('Nom et email requis');
+    
+    // Validation stricte du numéro de téléphone RDC
+    if (!formData.beneficiaryPhone.startsWith('+243') || formData.beneficiaryPhone.length < 12) {
+      notificationService.error("Le numéro WhatsApp doit être au format international RDC (ex: +243810000000)");
       return;
     }
-    addClient({
-      name: form.name,
-      email: form.email,
-      date: new Date().toISOString().slice(0, 10),
-    })
-      .then((newClient) => {
-        setClients([...clients, newClient]);
-        setForm({ name: '', email: '' });
-        setSuccess('Client ajouté avec succès !');
-      })
-      .catch(() => setError("Erreur lors de l'ajout du client"));
-  };
 
-  const handleEditChange = (e) => {
-    setEditForm({ ...editForm, [e.target.name]: e.target.value });
-  };
+    setIsSubmitting(true);
+    
+    try {
+      if (notificationService?.info) {
+        notificationService.info("Validation des données du bénéficiaire...");
+      }
 
-  const handleEdit = (client) => {
-    setEditId(client.id);
-    setEditForm({ name: client.name, email: client.email });
-  };
+      // Simulation d'une latence réseau
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
-  const handleEditSave = (id) => {
-    updateClient(id, { name: editForm.name, email: editForm.email })
-      .then((updated) => {
-        setClients(clients.map((c) => (c.id === id ? updated : c)));
-        setEditId(null);
-        setEditForm({ name: '', email: '' });
-        setSuccess('Client modifié avec succès !');
-      })
-      .catch(() => setError('Erreur lors de la modification du client'));
-  };
-
-  const handleDelete = (id) => {
-    setError('');
-    setSuccess('');
-    if (window.confirm('Voulez-vous vraiment supprimer ce client ?')) {
-      apiDeleteClient(id)
-        .then(() => {
-          setClients(clients.filter((c) => c.id !== id));
-          setSuccess('Client supprimé avec succès !');
-        })
-        .catch(() => setError('Erreur lors de la suppression du client'));
+      // Redirection vers la page de paiement sécurisée en transmettant les informations
+      navigate('/passerelle-paiement', {
+        state: {
+          selectedPack,
+          beneficiaryData: formData
+        }
+      });
+    } catch (error) {
+      notificationService.error("Une erreur est survenue lors de l'enregistrement.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-200 to-dark-300 px-4 py-8">
-      {/* Bouton retour site principal */}
-      <div className="mb-6 flex justify-start">
-        <button
-          type="button"
-          className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
-          onClick={() => navigate('/')}
-        >
-          ← Retour au site principal
-        </button>
-      </div>
-      {/* Header + Logo */}
-      <header className="flex items-center gap-4 mb-8">
-        <img
-          src="/images/logo.png"
-          alt="Logo"
-          className="h-12 w-12 rounded-full shadow-lg"
-        />
-        <h1 className="text-3xl font-bold text-white">
-          Enregistrement des Clients
-        </h1>
-      </header>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
+      <NavbarSecured />
 
-      {/* Barre de recherche dynamique + Filtrage avancé + Export CSV */}
-      <div className="mb-8 max-w-md mx-auto flex flex-col gap-2">
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-4 py-2 rounded-lg bg-dark-100/50 border text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple mb-2"
-          placeholder="Rechercher un client par nom ou email..."
-        />
-        <input
-          type="date"
-          value={filterDate}
-          onChange={(e) => setFilterDate(e.target.value)}
-          className="w-full px-4 py-2 rounded-lg bg-dark-100/50 border text-white focus:outline-none focus:ring-2 focus:ring-purple mb-2"
-        />
-        <button
-          type="button"
-          onClick={handleExportCSV}
-          className="w-full py-2 bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold rounded-lg hover:scale-105 transition"
-        >
-          Exporter la liste (CSV)
-        </button>
-      </div>
-      {/* Registration Form */}
-      <form
-        onSubmit={handleSubmit}
-        className="mb-8 bg-dark-300/80 p-6 rounded-xl shadow-lg max-w-md mx-auto"
-      >
-        <h2 className="text-xl font-semibold text-white mb-4">
-          Ajouter un client
-        </h2>
-        {error && <div className="mb-4 text-red-400">{error}</div>}
-        {success && <div className="mb-4 text-green-400">{success}</div>}
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-sm text-gray-300 mb-2">
-            Nom complet
-          </label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            value={form.name}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg bg-dark-100/50 border text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple"
-            placeholder="Nom du client"
-          />
+      <main className="flex-grow max-w-6xl w-full mx-auto px-6 py-20 pt-28 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        {/* COLONNE GAUCHE : Récapitulatif du Pack d'Assurance choisi */}
+        <div className="lg:col-span-1">
+          <div className="bg-gradient-to-br from-[#0C1E36] to-[#11294A] text-white p-6 rounded-2xl shadow-md border-b-4 border-[#00A3E0] sticky top-24">
+            <h3 className="text-xs font-black uppercase tracking-widest text-[#00A3E0] mb-2">Formule Sélectionnée</h3>
+            <h2 className="text-2xl font-black mb-1">{selectedPack.name}</h2>
+            <div className="text-2xl font-black text-[#FDD100] mb-4">
+              {selectedPack.price} USD <span className="text-xs text-white/60 font-normal">/ mois</span>
+            </div>
+            
+            <div className="border-t border-white/10 pt-4 space-y-3">
+              <p className="text-xs text-slate-300 flex items-center gap-2">
+                <FaInfoCircle className="text-[#00A3E0]" /> {selectedPack.coverageLimit}
+              </p>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                En remplissant ce formulaire, vous initiez la création d'une carte d'assuré numérique ARCA rattachée à votre compte de la Diaspora.
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm text-gray-300 mb-2">
-            Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            value={form.email || ''}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg bg-dark-100/50 border text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple"
-            placeholder="bendelothielcy@gmail.com"
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full py-2 bg-gradient-to-r from-purple to-pink text-white font-semibold rounded-lg hover:scale-105 transition"
-        >
-          Ajouter
-        </button>
-      </form>
 
-      {/* Clients Table */}
-      <section className="max-w-2xl mx-auto bg-dark-300/80 p-6 rounded-xl shadow-lg">
-        <h2 className="text-xl font-semibold text-white mb-4">
-          Liste des inscrits
-        </h2>
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-dark-400 text-gray-200">
-              <th className="py-2 px-4">Nom</th>
-              <th className="py-2 px-4">Email</th>
-              <th className="py-2 px-4">Date</th>
-              <th className="py-2 px-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedClients.map((client) => (
-              <tr key={client.id} className="border-b border-gray-700">
-                {editId === client.id ? (
-                  <>
-                    <td className="py-2 px-4 text-white">
-                      <input
-                        type="text"
-                        name="name"
-                        value={editForm.name}
-                        onChange={handleEditChange}
-                        className="px-2 py-1 rounded bg-dark-100/50 text-white border"
-                      />
-                    </td>
-                    <td className="py-2 px-4 text-gray-300">
-                      <input
-                        type="email"
-                        name="email"
-                        value={editForm.email}
-                        onChange={handleEditChange}
-                        className="px-2 py-1 rounded bg-dark-100/50 text-white border"
-                      />
-                    </td>
-                    <td className="py-2 px-4 text-gray-400">{client.date}</td>
-                    <td className="py-2 px-4">
-                      <button
-                        className="mr-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                        onClick={() => handleEditSave(client.id)}
-                      >
-                        Sauver
-                      </button>
-                      <button
-                        className="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600"
-                        onClick={() => setEditId(null)}
-                      >
-                        Annuler
-                      </button>
-                    </td>
-                  </>
-                ) : (
-                  <>
-                    <td className="py-2 px-4 text-white">{client.name}</td>
-                    <td className="py-2 px-4 text-gray-300">{client.email}</td>
-                    <td className="py-2 px-4 text-gray-400">{client.date}</td>
-                    <td className="py-2 px-4">
-                      <button
-                        className="mr-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                        onClick={() => handleEdit(client)}
-                      >
-                        Éditer
-                      </button>
-                      <button
-                        className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                        onClick={() => handleDelete(client.id)}
-                      >
-                        Supprimer
-                      </button>
-                    </td>
-                  </>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {/* Pagination */}
-        <div className="flex justify-center items-center gap-2 mt-4">
-          <button
-            type="button"
-            disabled={page === 1}
-            onClick={() => setPage(page - 1)}
-            className="px-3 py-1 rounded bg-dark-100 text-white disabled:opacity-50"
+        {/* COLONNE DROITE : Formulaire d'identification du bénéficiaire local */}
+        <div className="lg:col-span-2">
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800"
           >
-            Précédent
-          </button>
-          <span className="text-white">
-            Page {page} / {totalPages || 1}
-          </span>
-          <button
-            type="button"
-            disabled={page === totalPages || totalPages === 0}
-            onClick={() => setPage(page + 1)}
-            className="px-3 py-1 rounded bg-dark-100 text-white disabled:opacity-50"
-          >
-            Suivant
-          </button>
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="p-3 bg-[#00A3E0]/10 text-[#00A3E0] rounded-xl">
+                <FaShieldAlt size={20} />
+              </div>
+              <div>
+                <h1 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white">Identité du Bénéficiaire</h1>
+                <p className="text-xs text-slate-500">Renseignez la personne physique qui utilisera les prestations en RDC.</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              
+              {/* Ligne : Nom & Prénom */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase text-slate-500 mb-1.5">Nom de famille</label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><FaUser size={14} /></span>
+                    <input
+                      type="text"
+                      name="beneficiaryLastName"
+                      required
+                      value={formData.beneficiaryLastName}
+                      onChange={handleChange}
+                      placeholder="Ex: Mbuyi"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#00A3E0]"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-slate-500 mb-1.5">Prénom</label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><FaUser size={14} /></span>
+                    <input
+                      type="text"
+                      name="beneficiaryFirstName"
+                      required
+                      value={formData.beneficiaryFirstName}
+                      onChange={handleChange}
+                      placeholder="Ex: Thérèse"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#00A3E0]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Ligne : WhatsApp & Lien de Parenté */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase text-slate-500 mb-1.5">N° WhatsApp (Notification PWA)</label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><FaPhone size={14} /></span>
+                    <input
+                      type="tel"
+                      name="beneficiaryPhone"
+                      required
+                      value={formData.beneficiaryPhone}
+                      onChange={handleChange}
+                      placeholder="+243810000000"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#00A3E0] font-mono text-slate-800 dark:text-white"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-slate-500 mb-1.5">Lien avec vous (Acheteur)</label>
+                  <select
+                    name="buyerRelation"
+                    value={formData.buyerRelation}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#00A3E0]"
+                  >
+                    {relations.map((rel) => (
+                      <option key={rel} value={rel}>{rel}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Ligne : Ville RDC & Pièce d'identité */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase text-slate-500 mb-1.5">Ville en RD Congo</label>
+                  <select
+                    name="beneficiaryCity"
+                    value={formData.beneficiaryCity}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#00A3E0]"
+                  >
+                    {citiesInRdc.map((city) => (
+                      <option key={city} value={city}>{city}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-slate-500 mb-1.5">N° National ID / Carte Électeur (Optionnel)</label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><FaIdCard size={14} /></span>   
+                    <input
+                      type="text"
+                      name="nationalID" 
+                        value={formData.nationalID}
+                        onChange={handleChange}
+                        placeholder="Ex: 123456789012"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#00A3E0]"
+                    />
+                  </div>
+                </div>
+              </div>
+                {/* Ligne : Adresse RDC */} 
+                <div>
+                    <label className="block text-xs font-bold uppercase text-slate-500 mb-1.5">Adresse complète en RD Congo</label>
+                    <div className="relative">
+                        <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><FaMapMarkerAlt size={14} /></span>
+                        <input
+                            type="text"
+                            name="beneficiaryAddress"
+                            required
+                            value={formData.beneficiaryAddress}
+                            onChange={handleChange}
+                            placeholder="Ex: 123 Avenue de la Paix, Quartier XYZ"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#00A3E0]"
+                        />
+                    </div>
+                </div>
+                {/* Boutons de navigation */}
+                <div className="flex justify-between items-center mt-6">
+                    <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-300"
+                    >   
+                    <FaArrowLeft /> Retour
+                    </button>
+                    <button
+                        type="submit"
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#00A3E0] text-sm font-bold text-white hover:bg-[#0088c4] transition-all duration-300"
+                    >
+                        Suivant <FaArrowRight />
+                    </button>
+                </div>
+            </form>
+          </motion.div>
         </div>
-      </section>
-      {/* Bouton Laisser un avis */}
-      <div className="max-w-xl mx-auto mb-10 flex justify-center">
-        <button
-          type="button"
-          className="bg-gradient-to-r from-purple to-pink text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:scale-105 transition"
-          onClick={() => (window.location.href = '/#testimonials')}
-        >
-          Laisser un avis
-        </button>
-      </div>
+      </main>
+      <Footer />
     </div>
   );
 }
