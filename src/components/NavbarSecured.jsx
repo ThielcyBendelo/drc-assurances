@@ -214,34 +214,34 @@ export default function NavbarSecured() {
             </div>
           </motion.div>
 
+          {/* ================= NAVIGATION DESKTOP SÉCURISÉE (KEY WARNING CORRIGÉ) ================= */}
+          <div className="hidden lg:flex items-center gap-7">
+            {navCategories && navCategories.map((category) => (
+              <div key={category.id} className="relative group py-2">
+                
+                {/* Déclencheur de catégorie Desktop */}
+                <button className="flex items-center gap-1.5 text-sm font-extrabold text-slate-700 dark:text-slate-200 hover:text-[#00A3E0] dark:hover:text-[#FDD100] transition-colors cursor-pointer">
+                  {category.label}
+                  <FaChevronDown size={10} className="opacity-60 group-hover:rotate-180 transition-transform duration-300" />
+                </button>
 
-          {/* ================= NAVIGATION DESKTOP ================= */}
-<div className="hidden lg:flex items-center gap-7">
-  {navCategories.map((category) => (
-    <div key={category.id} className="relative group py-2">
-      {/* ✅ CORRIGÉ : Ce bouton se ferme immédiatement à la ligne 7, il n'enveloppe plus le dropdown */}
-      <button className="flex items-center gap-1.5 text-sm font-extrabold text-slate-700 dark:text-slate-200 hover:text-[#00A3E0] dark:hover:text-[#FDD100] transition-colors cursor-pointer">
-        {category.label}
-        <FaChevronDown size={10} className="opacity-60 group-hover:rotate-180 transition-transform duration-300" />
-      </button>
+                {/* Dropdown Menu Desktop enveloppé sous Morphisme de Verre */}
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-60 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-100 dark:border-slate-800/80 rounded-2xl shadow-2xl opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 z-50 p-2 space-y-1">
+                  {category.items && category.items.map((item) => (
+                    <button 
+                      key={item.href} // ✅ SÉCURISÉ : Clé unique indispensable pour l'arbre de rendu React
+                      onClick={(e) => handleNavClick(item.href, e)} 
+                      className="w-full px-4 py-3 flex items-center gap-3 text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-[#00A3E0] dark:hover:text-[#FDD100] transition-all rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 text-left cursor-pointer"
+                    >
+                      <span className="text-[#00A3E0] opacity-90">{item.icon}</span>
+                      <span>{item.label}</span>
+                    </button>
+                  ))}
+                </div>
 
-      {/* Dropdown Menu Desktop */}
-      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-60 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-100 dark:border-slate-800/80 rounded-2xl shadow-2xl opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 z-50 p-2 space-y-1">
-        {category.items.map((item) => (
-          <button 
-            key={item.href} 
-            onClick={(e) => handleNavClick(item.href, e)} 
-            className="w-full px-4 py-3 flex items-center gap-3 text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-[#00A3E0] dark:hover:text-[#FDD100] transition-all rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 text-left cursor-pointer"
-          >
-            <span className="text-[#00A3E0] opacity-90">{item.icon}</span>
-            <span>{item.label}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  ))}
-</div>
-
+              </div>
+            ))}
+          </div>
 
            {/* CONTROLES UTILITAIRES & SYSTEMES BARRE */}
 <div className="flex items-center gap-2 ml-2 border-l border-slate-200 dark:border-slate-800 pl-6 h-6">
@@ -354,26 +354,29 @@ export default function NavbarSecured() {
         {/* 3. LE BOUTON MOBILE ET USER MENU (Doit être en dehors du bloc desktop !) */}
         <div className="lg:hidden flex items-center gap-3">
           
-          {/* USER MENU PRO / DROPDOWN AVATAR (MOBILE) */}
+                   {/* USER MENU PRO / DROPDOWN AVATAR (MOBILE) */}
           {isAuthenticated && (
             <div className="relative" ref={userMenuRef}>
               <button 
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                onClick={(e) => {
+                  e.stopPropagation(); // ✅ BANQUE FIX : Empêche le menu de se refermer tout seul
+                  setUserMenuOpen(!userMenuOpen);
+                }}
                 className="flex items-center p-1 rounded-full border border-slate-200 dark:border-slate-800 hover:border-[#00A3E0] transition-all bg-slate-50 dark:bg-slate-800 cursor-pointer"
               >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#00A3E0] to-[#FDD100] flex items-center justify-center text-white font-black text-xs shadow-inner">
                   {currentUser?.name ? currentUser.name.substring(0, 2).toUpperCase() : <FaUserCircle size={18} />}
                 </div>
               </button>
-
-              {/* Dropdown Menu de l'Espace Connecté sur Mobile */}
+                            {/* Dropdown Menu de l'Espace Connecté sur Mobile */}
               <AnimatePresence>
                 {userMenuOpen && (
                   <motion.div 
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    className="absolute right-0 mt-3 w-56 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-100 dark:border-slate-800/80 rounded-2xl shadow-2xl z-50 p-3 space-y-2.5 font-sans"
+                    onClick={(e) => e.stopPropagation()} // ✅ AJOUTÉ : Empêche la fermeture quand on clique à l'intérieur du menu
+                    className="absolute right-0 mt-3 w-56 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-100 dark:border-slate-800/80 rounded-2xl shadow-2xl z-[9999] p-3 space-y-2.5 font-sans" // ✅ CORRIGÉ : Passage en z-[9999] pour passer au-dessus des sections de la page
                   >
                     <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-800 pb-3">
                       <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500">
@@ -404,6 +407,7 @@ export default function NavbarSecured() {
               </AnimatePresence>
             </div>
           )}
+
 
           {/* LE BOUTON HAMBURGER TOGGLE */}
           <button 

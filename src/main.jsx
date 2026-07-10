@@ -4,6 +4,9 @@ import './index.css';
 import App from './App.jsx';
 import { BrowserRouter } from 'react-router-dom';
 
+// Importer le ThemeProvider global pour régler le bug de crash des Hooks
+import { ThemeProvider } from './contexts/ThemeContext.jsx'; // ✅ AJOUTÉ : Importation indispensable du contexte
+
 // ===== 🛡️ SÉCURITÉ INSTITUTIONNELLE =====
 // Initialiser la sécurité CSP et les validations d'infrastructure
 import { applyCSPMeta, setupCSPViolationReporting } from './utils/cspConfig';
@@ -24,7 +27,10 @@ console.log('🛡️ Infrastructure de sécurité DRC Assurances initialisée');
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      {/* ✅ ENVELOPPEMENT RACINE : Initialise le thème et ses hooks en priorité absolue avant l'activation des routes */}
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </BrowserRouter>
   </StrictMode>
 );

@@ -12,26 +12,35 @@ export const CSPConfig = {
   // Pour le développement local - headers relaxés pour Vite HMR et les tests
   development: {
     'default-src': ["'self'"],
-    'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://cinetpay.com', 'https://stripe.com'], // Inclus CinetPay & Stripe
-    'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-    'font-src': ["'self'", 'https://fonts.gstatic.com'],
-    'img-src': ["'self'", 'data:', 'https://unsplash.com', 'https://*.stripe.com'], // Inclus Unsplash pour le blog
-    // 🟢 CORRIGÉ : Ajout de l'IP numérique locale pour autoriser les liaisons directes de fetch
+    'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://cinetpay.com', 'https://stripe.com'],
+    'style-src': ["'self'", "'unsafe-inline'", 'https://googleapis.com'],
+    'font-src': ["'self'", 'https://gstatic.com'],
+    'img-src': ["'self'", 'data:', 'https://*.unsplash.com', 'https://unsplash.com', 'https://*.stripe.com'], 
     'connect-src': ["'self'", 'http://localhost:*', 'http://127.0.0.1:*', 'https://cinetpay.com', 'https://api.stripe.com'],
-    'frame-src': ["'self'", 'https://cinetpay.com', 'https://stripe.com'], // Autorise les fenêtres de paiement
+    // ✅ CORRIGÉ : L'ajout de l'astérisque autorise le sous-domaine 'www.' de Google Maps
+   // ✅ RECTIFICATION : On ajoute la racine ET les sous-domaines pour Google (.com et .cd)
+'frame-src': [
+  "'self'", 
+  'https://cinetpay.com', 
+  'https://stripe.com', 
+  'https://google.com',    // ← Autorise l'adresse exacte bloquée par votre log
+  'https://*.google.com',  // ← Autorise les sous-domaines (www, maps, etc.)
+  'https://google.cd',     // ← Autorise la racine Congo
+  'https://*.google.cd'    // ← Autorise les sous-domaines Congo
+],
   },
 
   // Pour la production - headers stricts et conformes aux audits ARCA
   production: {
     'default-src': ["'self'"],
-    'script-src': ["'self'", "'unsafe-inline'", 'https://cinetpay.com', 'https://stripe.com'], // Clés de confiance de nos passerelles
-    'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-    'font-src': ["'self'", 'https://fonts.gstatic.com'],
-    'img-src': ["'self'", 'data:', 'https://unsplash.com', 'https://*.stripe.com', '/logo.png'],
-    'connect-src': ["'self'", 'https://cinetpay.com', 'https://stripe.com', 'https://drcassurances.com'], // Remplacez par votre vrai domaine API
-    'frame-src': ["'self'", 'https://cinetpay.com', 'https://stripe.com'],
-     // Interdire l'embedding total hors domaine pour bloquer le clickjacking
-    'form-action': ["'self'", 'https://cinetpay.com'], // Soumettre les données uniquement chez nous ou vers l'opérateur local
+    'script-src': ["'self'", "'unsafe-inline'", 'https://cinetpay.com', 'https://stripe.com'],
+    'style-src': ["'self'", "'unsafe-inline'", 'https://googleapis.com'],
+    'font-src': ["'self'", 'https://gstatic.com'],
+    'img-src': ["'self'", 'data:', 'https://*.unsplash.com', 'https://unsplash.com', 'https://*.stripe.com', '/logo.png'],
+    'connect-src': ["'self'", 'https://cinetpay.com', 'https://stripe.com', 'https://drcassurances.com'],
+    // ✅ CORRIGÉ : Protection identique appliquée sur le serveur de production
+    'frame-src': ["'self'", 'https://cinetpay.com', 'https://stripe.com', 'https://*.google.com', 'https://*.google.cd'],
+    'form-action': ["'self'", 'https://cinetpay.com'],
     'base-uri': ["'self'"],
     'upgrade-insecure-requests': [],
   },

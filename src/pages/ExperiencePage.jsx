@@ -100,30 +100,47 @@ export default function ExperiencePage() {
   </motion.div>
 </header>
 
-
-      {/* Les Piliers de la Conformité */}
-      <main className="flex-grow max-w-7xl mx-auto px-6 py-16 w-full space-y-16">
+      {/* ================= SECTION 1 : GRILLE DES PILIERS DE LA CONFORMITÉ PREMIUM ================= */}
+      <main className="flex-grow max-w-7xl mx-auto px-6 py-16 w-full space-y-16 font-sans select-none">
         
-        {/* Section 1 : Grille des Piliers */}
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {pillars.map((pillar, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: idx * 0.1 }}
-              className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col items-start gap-4 hover:shadow-md transition-shadow duration-300"
+              viewport={{ once: true, margin: "-50px" }}
+              whileHover={{ 
+                y: -5, 
+                scale: 1.015,
+                transition: { type: "spring", stiffness: 400, damping: 12 } 
+              }}
+              transition={{ type: "spring", stiffness: 100, damping: 20, delay: idx * 0.1 }}
+              className="group bg-white/75 dark:bg-slate-950/75 backdrop-blur-xl p-6 md:p-8 rounded-3xl border border-white/50 dark:border-slate-800/40 shadow-xl hover:shadow-2xl hover:border-[#00A3E0]/30 dark:hover:border-slate-700/60 flex flex-col items-start gap-5 transition-colors duration-300 cursor-pointer drop-shadow-[0_4px_12px_rgba(0,0,0,0.04)]"
             >
-              <div className="p-3.5 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                {pillar.icon}
+              {/* Conteneur d'icône modernisé avec reflets interactifs */}
+              <div className="p-3.5 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 rounded-xl text-[#007cb0] dark:text-[#00A3E0] shadow-sm group-hover:text-[#CE1126] dark:group-hover:text-[#FDD100] group-hover:border-[#00A3E0]/30 transition-all duration-300">
+                {React.cloneElement(pillar.icon, { size: 20, className: "transform group-hover:scale-110 group-hover:rotate-3 transition-transform" })}
               </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-snug">
+
+              {/* Titre du Pilier hautement lisible et contrasté */}
+              <h3 className="text-base md:text-lg font-black text-slate-900 dark:text-white leading-snug tracking-tight group-hover:text-red-600 dark:group-hover:text-[#00A3E0] transition-colors duration-200">
                 {pillar.title}
               </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+
+              {/* Description technique de la garantie ou réglementation */}
+              <p className="text-xs md:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-bold">
                 {pillar.description}
               </p>
+
+              {/* Indicateur de conformité subtil en bas de carte */}
+              <div className="w-full pt-4 mt-auto border-t border-slate-100 dark:border-slate-800/40 flex items-center justify-between text-[10px] uppercase font-black tracking-widest text-slate-400 dark:text-slate-500">
+                <span>Standard Réglementaire</span>
+                <span className="text-emerald-500 dark:text-emerald-400 flex items-center gap-1.5 font-black">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Approuvé
+                </span>
+              </div>
+
             </motion.div>
           ))}
         </section>

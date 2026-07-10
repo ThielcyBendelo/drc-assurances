@@ -2,13 +2,16 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}", // S'assure que Tailwind lit bien tous vos composants React
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class', // Gère le mode sombre de votre Navbar/FAQ
   theme: {
     extend: {
+      // ✅ AJOUTEZ CE BLOC POUR ACTIVER LES NOUVELLES POLICES
       fontFamily: {
-        // Ajoute la police "Plus Jakarta Sans" comme police sans-serif par défaut
-        sans: ['"Plus Jakarta Sans"', 'sans-serif'], 
+        roboto: ['Roboto', 'sans-serif'],           // Crée une classe réutilisable font-roboto
+        Saira: ['Saira', 'sans serif'],
+        Antonio: ['Antonio', 'sans serif']
       },
     },
   },

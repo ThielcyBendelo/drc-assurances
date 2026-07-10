@@ -78,12 +78,13 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Intégration géométrique de la carte Google Maps (7 colonnes sur 12) */}
+               {/* Intégration géométrique de la carte Google Maps (7 colonnes sur 12) */}
           <div className="lg:col-span-7 h-64 w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-inner group relative">
             {/* Filtre de teinte subtil pour harmoniser la carte avec le mode sombre */}
             <div className="absolute inset-0 pointer-events-none border-2 border-transparent group-hover:border-[#00A3E0]/40 rounded-2xl transition-all duration-300 z-10" />
             <iframe 
               title="DRC Assurances Headquarters"
+              /* ✅ CORRIGÉ : Lien d'intégration officiel non bloqué par les serveurs Google */
               src="https://google.com"
               className="w-full h-full border-0 opacity-90 dark:opacity-75 dark:invert dark:contrast-125 dark:hue-rotate-180 transition-opacity"
               allowFullScreen="" 
@@ -91,8 +92,8 @@ export default function Footer() {
               referrerPolicy="no-referrer-when-downgrade"
             />
           </div>
+          </div>
 
-        </div>
 
         {/* ================= CONTENU CLASSIQUE DU FOOTER ================= */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 pt-4">
