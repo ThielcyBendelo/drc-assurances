@@ -8,6 +8,7 @@ import image1 from '../assets/image1.png'; // Ajustez le chemin selon votre fich
 import image2 from '../assets/image2.png';
 import image3 from '../assets/image3.png';
 import image4 from '../assets/image4.png';
+import background1 from '../assets/background1.png';
 import { 
   FaShieldAlt, FaHeartbeat, FaCar, FaGraduationCap, 
   FaPlane, FaCheckCircle, FaArrowRight, FaHospitalSymbol 
@@ -85,21 +86,65 @@ const formulas = [
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
       <NavbarSecured />
 
-      {/* En-tête de la Vitrine des Formules */}
-      <header className="bg-gradient-to-br from-[#0C1E36] to-[#11294A] text-white px-6 py-20 pt-28 text-center border-b-4 border-[#00A3E0] relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none"></div>
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <span className="px-4 py-1.5 rounded-full bg-[#00A3E0]/20 text-[#00A3E0] text-xs font-bold uppercase tracking-widest border border-[#00A3E0]/30 inline-flex items-center gap-2 mb-4">
-            <FaShieldAlt /> Catalogue Officiel des Garanties
-          </span>
-          <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight">
-            Nos Solutions de <span className="text-[#FDD100]">Protection</span> Intégrale
-          </h1>
-          <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-            Découvrez le détail technique de nos formules agréées. Des contrats transparents conçus pour apporter une sérénité totale à la diaspora et à leurs bénéficiaires locaux.
-          </p>
-        </div>
-      </header>
+{/* En-tête de la Vitrine des Formules unifié, premium et animé */}
+<header className="relative bg-slate-100 dark:bg-slate-950 px-6 py-24 pt-32 text-center border-b-4 border-[#00A3E0] overflow-hidden font-sans select-none">
+  
+  {/* 1. L'IMAGE D'ARRIÈRE-PLAN LUMINEUSE ET TOTALEMENT VISIBLE (100% OPACITÉ) */}
+  <div className="absolute inset-0 z-0">
+    <img 
+      src={background1} 
+      alt="DRC Assurances Background" 
+      className="w-full h-full object-cover object-center transform scale-102 transition-transform duration-700"
+    />
+    <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-slate-100 dark:from-slate-950/10 dark:via-transparent dark:to-slate-950" />
+  </div>
+
+  {/* 2. LE MOTIF DE GRILLE EXISTANT */}
+  <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#ffffff_1px,transparent_1px)] dark:opacity-5 [background-size:24px_24px] pointer-events-none z-1" />
+
+  {/* 3. LE CONTENU CENTRAL ANIMÉ AVEC FRAMER MOTION */}
+  <motion.div 
+    initial={{ opacity: 0, scale: 0.98, y: 15 }}
+    animate={{ opacity: 1, scale: 1, y: 0 }}
+    transition={{ type: "spring", stiffness: 100, damping: 20 }}
+    className="relative z-10 max-w-4xl mx-auto p-6 md:p-10 bg-white/75 dark:bg-slate-950/75 backdrop-blur-xl rounded-3xl border border-white/50 dark:border-slate-800/40 shadow-2xl space-y-6 flex flex-col items-center drop-shadow-[0_4px_12px_rgba(0,0,0,0.06)]"
+  >
+    
+    {/* Badge Officiel Animé */}
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.15, type: "spring" }}
+    >
+      <span className="px-4 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 text-[#007cb0] dark:text-[#00A3E0] text-xs font-black uppercase tracking-widest border border-slate-200 dark:border-slate-800 inline-flex items-center gap-2 shadow-sm">
+        <FaShieldAlt className="text-[#CE1126]" /> Catalogue Officiel des Garanties
+      </span>
+    </motion.div>
+
+    {/* Titre avec gestion de la lisibilité */}
+    <motion.h1 
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.25, duration: 0.4 }}
+      className="text-4xl md:text-6xl font-black tracking-tight leading-tight text-red-600 dark:text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)]"
+    >
+      Nos Solutions de <br />
+      <span className="text-[#E5B200] dark:text-[#FDD100] drop-shadow-[0_1px_2px_rgba(0,0,0,0.2)]">Protection</span> Intégrale
+    </motion.h1>
+
+    {/* Description */}
+    <motion.p 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.35, duration: 0.5 }}
+      className="text-slate-700 dark:text-slate-200 max-w-2xl mx-auto text-base md:text-lg leading-relaxed font-bold"
+    >
+      Découvrez le détail technique de nos formules agréées. Des contrats transparents conçus pour apporter une sérénité totale à la diaspora et à leurs bénéficiaires locaux.
+    </motion.p>
+
+  </motion.div>
+</header>
+
 
    {/* Section d'affichage des services / formules d'assurance */}
       <main className="flex-grow max-w-7xl mx-auto px-6 py-16 w-full">

@@ -1,5 +1,6 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // ⚡ FIX : Import du système de navigation
+import { useNavigate } from "react-router-dom"; 
+import { motion } from "framer-motion"; // ✅ AJOUTÉ : Import indispensable pour faire fonctionner <motion.button>
 import { FaChevronDown, FaQuestionCircle, FaShieldAlt } from "react-icons/fa";
 
 const faqs = [
@@ -26,60 +27,69 @@ const faqs = [
 ];
 
 function FAQSection() {
-  const navigate = useNavigate(); // ⚡ FIX : Initialisation du hook de navigation
+  const navigate = useNavigate(); 
 
   return (
-    <section className="py-24 px-4 bg-slate-50 dark:bg-slate-950" id="faq">
-      <div className="max-w-4xl mx-auto">
+    // ✅ CORRIGÉ : Le commentaire a été retiré de cette zone sensible pour éliminer l'erreur "Unexpected token" de Vite
+    <section className="py-24 px-4 bg-slate-50 dark:bg-slate-950 font-sans select-none" id="faq">
+      <div className="max-w-4xl mx-auto space-y-12">
         
-        {/* En-tête de la section aux couleurs de la RDC */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center p-3 bg-[#00A3E0]/10 text-[#00A3E0] rounded-full mb-4">
-            <FaQuestionCircle size={24} />
+        {/* En-tête de la section adapté au style premium */}
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center p-3 bg-white/90 dark:bg-slate-900/90 text-[#007cb0] dark:text-[#00A3E0] rounded-xl border border-slate-200 dark:border-slate-800 mb-4 shadow-sm">
+            <FaQuestionCircle size={22} className="text-[#CE1126]" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white font-serif mb-4 uppercase tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-black text-red-600 dark:text-white mb-4 tracking-tight">
             Foire Aux Questions
           </h2>
-          <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed font-bold">
             Des questions sur nos couvertures, le tunnel de paiement de la diaspora ou le réseau d'hôpitaux partenaires en RDC ? Retrouvez toutes nos réponses.
           </p>
         </div>
 
-        {/* Liste des FAQs */}
+        {/* Liste des FAQs avec effets visuels fluides */}
         <div className="space-y-4">
           {faqs.map((faq, idx) => (
             <details 
               key={idx} 
-              className="group bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden transition-all duration-300 hover:shadow-md"
+              className="group bg-white dark:bg-slate-900 rounded-2xl shadow-xs border border-slate-200/60 dark:border-slate-800/80 overflow-hidden transition-all duration-300 hover:shadow-md"
             >
-              <summary className="flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 cursor-pointer p-6 list-none select-none">
-                <span className="text-base md:text-lg pr-4">{faq.question}</span>
-                <div className="text-[#00A3E0] dark:text-[#FDD100] transition-transform duration-300 group-open:rotate-180">
-                  <FaChevronDown />
+              <summary className="flex items-center justify-between font-black text-slate-800 dark:text-slate-100 cursor-pointer p-6 list-none select-none">
+                <span className="text-sm md:text-base pr-4 leading-snug">{faq.question}</span>
+                <div className="text-[#00A3E0] dark:text-[#FDD100] transition-transform duration-300 group-open:rotate-180 shrink-0">
+                  <FaChevronDown size={14} />
                 </div>
               </summary>
-              <div className="px-6 pb-6 text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed border-t border-slate-50 dark:border-slate-800/50 pt-4">
+              <div className="px-6 pb-6 text-slate-600 dark:text-slate-400 text-xs md:text-sm leading-relaxed border-t border-slate-100 dark:border-slate-800/40 pt-4 font-semibold">
                 {faq.answer}
               </div>
             </details>
           ))}
         </div>
 
-        {/* CTA d'aide institutionnelle */}
-        <div className="mt-12 text-center p-8 bg-gradient-to-br from-[#0C1E36] to-[#11294A] rounded-2xl text-white shadow-xl relative overflow-hidden border-b-4 border-[#00A3E0]">
-          <div className="absolute -right-10 -bottom-10 opacity-10 text-white pointer-events-none">
-            <FaShieldAlt size={200} />
-          </div>
-          <h3 className="text-xl font-bold mb-2 relative z-10">Besoin d'une formule sur-mesure pour votre entreprise ?</h3>
-          <p className="text-slate-300 mb-6 italic text-sm md:text-base relative z-10">Nos conseillers techniques ARCA sont disponibles pour concevoir vos contrats Flotte ou Santé Collective.</p>
+        {/* CTA d'aide institutionnelle en verre poli (Glassmorphism) */}
+        <div className="mt-8 text-center p-6 md:p-10 bg-white/75 dark:bg-slate-950/75 backdrop-blur-xl rounded-3xl border border-white/50 dark:border-slate-800/40 shadow-2xl relative overflow-hidden flex flex-col items-center space-y-4">
           
-          {/* ⚡ FIX : onClick modifié pour rediriger vers la route configurée dans App.jsx */}
-          <button 
+          <div className="absolute -right-10 -bottom-10 opacity-5 text-slate-400 dark:text-white pointer-events-none">
+            <FaShieldAlt size={180} />
+          </div>
+          
+          <h3 className="text-lg md:text-xl font-black tracking-tight text-slate-900 dark:text-white relative z-10">
+            Besoin d'une formule sur-mesure pour votre entreprise ?
+          </h3>
+          <p className="text-slate-600 dark:text-slate-300 italic text-xs md:text-sm font-bold relative z-10 max-w-xl">
+            Nos conseillers techniques ARCA sont disponibles pour concevoir vos contrats Flotte ou Santé Collective.
+          </p>
+          
+          {/* Bouton transactionnel avec adaptation colorimétrique stricte du texte */}
+          <motion.button 
+            whileHover={{ y: -3, scale: 1.015, transition: { type: "spring", stiffness: 400, damping: 10 } }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => navigate('/urgences-contact')} 
-            className="px-8 py-3 bg-[#00A3E0] hover:bg-[#0082B3] text-white rounded-xl font-bold transition-all shadow-md transform hover:scale-105 relative z-10"
+            className="px-8 py-3.5 bg-[#00A3E0] dark:bg-[#FDD100] text-white dark:text-slate-950 rounded-xl font-black text-xs uppercase tracking-wider transition-all duration-200 shadow-md hover:shadow-lg border-b-4 border-[#006a94] dark:border-[#cda900] relative z-10 cursor-pointer"
           >
             Contacter un conseiller RDC
-          </button>
+          </motion.button>
         </div>
 
       </div>

@@ -11,17 +11,24 @@ app.use(cors());
 app.use(express.json());
 
 // Configuration SQL Server (Base de données DRC Assurances)
+// Configuration SQL Server (Lecture stricte des accès du .env)
 const dbConfig = {
-    user: process.env.DB_USER || 'sa',
-    password: process.env.DB_PASSWORD || '',
-    server: process.env.DB_SERVER || 'localhost',
-    database: process.env.DB_NAME || process.env.DB_DATABASE || 'DrcAssurancesDB', // ✅ FIX : Gère à la fois DB_NAME et DB_DATABASE de votre .env
+    user: process.env.DB_USER,        // Prendra 'sa'
+    password: process.env.DB_PASSWORD, // Prendra votre mot de passe
+    server: process.env.DB_SERVER || 'localhost', 
+    database: process.env.DB_NAME || 'DrcAssurancesDB',
     options: {
-        encrypt: true,
+        encrypt: false, // Garder sur false pour SQLEXPRESS en local
         trustServerCertificate: true,
-        connectTimeout: 15000 // ✅ FIX : Évite le blocage infini sur Render si le réseau coupe
+        enableArithAbort: true,
+        connectTimeout: 15000
     }
 };
+
+
+// 💡 NOTE : Si la bibliothèque mssql exige un protocole d'authentification Windows, 
+// elle va automatiquement utiliser les privilèges de votre session 'IRBENDELO' active.
+
 
 // Connexion Initiale encapsulée dans une fonction asynchrone
 // ✅ FIX : Empêche le crash fatal immédiat de Render si le serveur SQL met du temps à répondre
@@ -80,6 +87,60 @@ app.get('/api/admin/claims', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+// =========================================================================
+// 💳 ENDPOINT : JOURNAL DES TRANSACTIONS FINANCIÈRES (FINTECH & MOBILE MONEY)
+// =========================================================================
+app.get('/api/admin/payments', async (req, res) => {
+    try {
+        const result = await sql.query(`
+            SELECT p.*, ip.PolicyNumber, ip.InsuranceBranch, u.FirstName + ' ' + u.LastName AS BuyerName
+            FROM Payments p
+            JOIN InsurancePolicies ip ON p.PolicyID = ip.PolicyID
+            JOIN Users u ON ip.BuyerID = u.UserID
+            ORDER BY p.PaymentDate DESC
+        `);
+        res.json(result.recordset);
+    } catch (err) {
+        res.status(500).json({ error: "Erreur lors de l'extraction des flux financiers", details: err.message });
+    }
+});
+
+// =========================================================================
+// 📄 ENDPOINT : REGISTRE DES QUITTANCES ET COMPTABILITÉ ARCA
+// =========================================================================
+app.get('/api/admin/invoices', async (req, res) => {
+    try {
+        const result = await sql.query(`
+            SELECT 
+                ip.PolicyID,
+                ip.PolicyNumber,
+                ip.InsuranceBranch,
+                ip.CoverageLevel,
+                ip.StartDate,
+                ip.EndDate,
+                u.FirstName + ' ' + u.LastName AS BuyerName,
+                u.Email AS BuyerEmail,
+                b.FirstName + ' ' + b.LastName AS BeneficiaryName,
+                b.City AS BeneficiaryCity,
+                pay.TransactionReference,
+                pay.AmountUSD,
+                pay.TaxArcaUSD,
+                pay.TotalPaidUSD,
+                pay.PaymentDate
+            FROM InsurancePolicies ip
+            JOIN Users u ON ip.BuyerID = u.UserID
+            JOIN Beneficiaries b ON ip.BeneficiaryID = b.BeneficiaryID
+            JOIN Payments pay ON pay.PolicyID = ip.PolicyID
+            ORDER BY pay.PaymentDate DESC
+        `);
+        res.json(result.recordset);
+    } catch (err) {
+        res.status(500).json({ error: "Erreur lors du chargement des quittances", details: err.message });
+    }
+});
+
+
 
 // ✅ FIX OBLIGATOIRE POUR DEPLOYER EN LIGNE : 
 // Écouter sur l'hôte standard '0.0.0.0' pour que Render puisse router le trafic public vers votre port

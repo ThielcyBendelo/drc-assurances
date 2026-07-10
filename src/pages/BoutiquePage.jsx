@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavbarSecured from '../components/NavbarSecured';
 import Footer from '../components/Footer';
+import background2 from '../assets/background2.png';
 import { 
   FaShieldAlt, FaHeartbeat, FaCar, FaGraduationCap, 
   FaPlane, FaCheckCircle, FaShoppingCart, FaInfoCircle,
@@ -118,37 +119,86 @@ useEffect(() => {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
       <NavbarSecured />
 
-      {/* En-tête du catalogue */}
-      <header className="bg-gradient-to-br from-[#0C1E36] to-[#11294A] text-white px-6 py-20 pt-28 text-center border-b-4 border-[#00A3E0] relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none"></div>
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <span className="px-4 py-1.5 rounded-full bg-[#FDD100]/10 text-[#FDD100] text-xs font-bold uppercase tracking-widest border border-[#FDD100]/20 inline-flex items-center gap-2 mb-4">
-            <FaShoppingCart /> Souscription Immédiate
-          </span>
-          <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight">
-            Catalogue des Packs <span className="text-[#00A3E0]">Micro-Assurance</span>
-          </h1>
-          <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-            Sélectionnez une formule claire, ajustée aux réalités locales de la RD Congo. Pas de frais cachés, résiliation libre à tout moment.
-          </p>
+            {/* En-tête du catalogue unifié, premium, animé et connecté aux assets */}
+      <header className="relative bg-slate-100 dark:bg-slate-950 px-6 py-24 pt-32 text-center border-b-4 border-[#00A3E0] overflow-hidden font-sans select-none">
+        
+        {/* 1. L'IMAGE D'ARRIÈRE-PLAN LUMINEUSE ET TOTALEMENT VISIBLE DESPUIS LES ASSETS */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={background2} 
+            alt="DRC Assurances Catalogue Background" 
+            className="w-full h-full object-cover object-center transform scale-102 transition-transform duration-700"
+          />
+          {/* Dégradé fluide de transition uniquement vers le bas de page */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-slate-100 dark:from-slate-950/10 dark:via-transparent dark:to-slate-950" />
+        </div>
 
-          {/* Boutons de filtrage dynamiques */}
-          <div className="mt-10 flex flex-wrap justify-center gap-2">
+        {/* 2. LE MOTIF DE GRILLE DISCRET */}
+        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#ffffff_1px,transparent_1px)] dark:opacity-5 [background-size:20px_20px] pointer-events-none z-1" />
+
+        {/* 3. LE CONTENU CENTRAL EMBALLÉ DANS UN PANNEAU DE VERRE ET ANIMÉ AVEC FRAMER MOTION */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.98, y: 15 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 100, damping: 20 }}
+          className="relative z-10 max-w-4xl mx-auto p-6 md:p-10 bg-white/75 dark:bg-slate-950/75 backdrop-blur-xl rounded-3xl border border-white/50 dark:border-slate-800/40 shadow-2xl space-y-6 flex flex-col items-center drop-shadow-[0_4px_12px_rgba(0,0,0,0.06)]"
+        >
+          
+          {/* Badge de transaction Animé */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, type: "spring" }}
+          >
+            <span className="px-4 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 text-[#007cb0] dark:text-[#00A3E0] text-xs font-black uppercase tracking-widest border border-slate-200 dark:border-slate-800 inline-flex items-center gap-2 shadow-sm">
+              <FaShoppingCart className="text-[#CE1126]" /> Souscription Immédiate
+            </span>
+          </motion.div>
+
+          {/* Titre avec gestion de la lisibilité et de la couleur en mode clair */}
+          <motion.h1 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.4 }}
+            className="text-4xl md:text-5xl font-black tracking-tight leading-tight text-red-600 dark:text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)]"
+          >
+            Catalogue des Packs <br />
+            <span className="text-[#E5B200] dark:text-[#FDD100] drop-shadow-[0_1px_2px_rgba(0,0,0,0.2)]">Micro-Assurance</span>
+          </motion.h1>
+
+          {/* Description ajustée pour la lisibilité sur fond clair et sombre */}
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.35, duration: 0.5 }}
+            className="text-slate-700 dark:text-slate-200 max-w-2xl mx-auto text-base md:text-sm font-bold leading-relaxed"
+          >
+            Sélectionnez une formule claire, ajustée aux réalités locales de la RD Congo. Pas de frais cachés, résiliation libre à tout moment.
+          </motion.p>
+
+          {/* ================= BOUTONS DE FILTRAGE DYNAMIQUES MODERNISÉS ================= */}
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45, duration: 0.4 }}
+            className="mt-4 flex flex-wrap justify-center gap-2 w-full max-w-2xl"
+          >
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveFilter(cat)}
-                className={`px-5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all ${
+                className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 border cursor-pointer ${
                   activeFilter === cat
-                    ? "bg-[#00A3E0] text-white shadow-md transform scale-105"
-                    : "bg-slate-900/40 text-slate-300 border border-slate-700 hover:bg-slate-800"
+                    ? "bg-[#00A3E0] text-white border-transparent shadow-lg shadow-[#00A3E0]/20 scale-102"
+                    : "bg-white/80 dark:bg-slate-900/60 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-[#00A3E0]/40"
                 }`}
               >
                 {cat}
               </button>
             ))}
-          </div>
-        </div>
+          </motion.div>
+
+        </motion.div>
       </header>
 
       {/* Grille des offres */}

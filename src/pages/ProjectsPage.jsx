@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import NavbarSecured from '../components/NavbarSecured';
 import Footer from '../components/Footer';
+import background1 from '../assets/background1.png';
 import { 
   FaHospital, FaWrench, FaMapMarkerAlt, FaPhoneAlt, 
   FaCheckCircle, FaSearch, FaBriefcaseMedical, FaStar 
@@ -81,54 +82,95 @@ export default function ProjectsPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
       <NavbarSecured />
 
-      {/* En-tête de la cartographie des prestataires */}
-      <header className="bg-gradient-to-br from-[#0C1E36] to-[#11294A] text-white px-6 py-20 pt-28 text-center border-b-4 border-[#00A3E0] relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none"></div>
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <span className="px-4 py-1.5 rounded-full bg-[#00A3E0]/20 text-[#00A3E0] text-xs font-bold uppercase tracking-widest border border-[#00A3E0]/30 inline-flex items-center gap-2 mb-4">
-            <FaBriefcaseMedical /> Tiers-Payant National
-          </span>
-          <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight">
-            Notre Réseau de Partenaires <span className="text-[#FDD100]">Agréés ARCA</span>
-          </h1>
-          <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-            Pas d'avance de frais. Présentez simplement votre carte virtuelle ou votre code QR dans nos établissements partenaires en RD Congo pour être pris en charge immédiatement.
-          </p>
+{/* En-tête de la cartographie des prestataires unifié et premium */}
+<header className="relative bg-slate-100 dark:bg-slate-950 px-6 py-24 pt-32 text-center border-b-4 border-[#00A3E0] overflow-hidden font-sans select-none">
+  
+  {/* 1. L'IMAGE D'ARRIÈRE-PLAN LUMINEUSE ET TOTALEMENT VISIBLE (100% OPACITÉ) */}
+  <div className="absolute inset-0 z-0">
+    <img 
+      src={background1} 
+      alt="DRC Assurances Network Background" 
+      className="w-full h-full object-cover object-center transform scale-102 transition-transform duration-700"
+    />
+    {/* ✅ LES OVERLAYS SOMBRES ONT ÉTÉ ENLEVÉS : Dégradé fluide de transition uniquement vers le bas de page */}
+    <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-slate-100 dark:from-slate-950/10 dark:via-transparent dark:to-slate-950" />
+  </div>
 
-          {/* Section Filtres Réseau */}
-          <div className="mt-8 bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-md max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 text-slate-800">
-            {/* Recherche textuelle */}
-            <div className="relative flex items-center">
-              <span className="absolute left-3 text-slate-400"><FaSearch size={14} /></span>
-              <input
-                type="text"
-                placeholder="Rechercher un hôpital, quartier..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs md:text-sm focus:outline-none focus:ring-1 focus:ring-[#00A3E0]"
-              />
-            </div>
+  {/* 2. LE MOTIF DE GRILLE EXISTANT (Superposé discrètement) */}
+  <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#ffffff_1px,transparent_1px)] dark:opacity-5 [background-size:24px_24px] pointer-events-none z-1" />
 
-            {/* Sélecteur Ville */}
-            <select
-              value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs md:text-sm focus:outline-none focus:ring-1 focus:ring-[#00A3E0]"
-            >
-              {cities.map(city => <option key={city} value={city}>{city === "Tous" ? "Toutes les villes" : city}</option>)}
-            </select>
+  {/* 3. LE CONTENU CENTRAL EMBALLÉ DANS UN COMPOSANT DE VERRE PREMIUM */}
+  <div className="relative z-10 max-w-5xl mx-auto p-6 md:p-10 bg-white/75 dark:bg-slate-950/75 backdrop-blur-xl rounded-3xl border border-white/50 dark:border-slate-800/40 shadow-2xl space-y-6 flex flex-col items-center drop-shadow-[0_4px_12px_rgba(0,0,0,0.06)]">
+    
+    <div>
+      <span className="px-4 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 text-[#007cb0] dark:text-[#00A3E0] text-xs font-black uppercase tracking-widest border border-slate-200 dark:border-slate-800 inline-flex items-center gap-2 shadow-sm">
+        <FaBriefcaseMedical className="text-[#CE1126]" /> Tiers-Payant National
+      </span>
+    </div>
 
-            {/* Sélecteur Spécialité */}
-            <select
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs md:text-sm focus:outline-none focus:ring-1 focus:ring-[#00A3E0]"
-            >
-              {types.map(t => <option key={t} value={t}>{t === "Tous" ? "Tous les types" : t === "Santé" ? "Structures Médicales" : "Garages & Réparations"}</option>)}
-            </select>
-          </div>
-        </div>
-      </header>
+    {/* Titre avec gestion du jaune ambré haute lisibilité en mode clair */}
+    <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight text-red-600 dark:text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)]">
+      Notre Réseau de Partenaires <br />
+      <span className="text-[#E5B200] dark:text-[#FDD100] drop-shadow-[0_1px_2px_rgba(0,0,0,0.2)]">Agréés ARCA</span>
+    </h1>
+
+    {/* Description ajustée pour la lisibilité sur fond clair et sombre */}
+    <p className="text-slate-700 dark:text-slate-200 max-w-2xl mx-auto text-base md:text-lg leading-relaxed font-bold">
+      Pas d'avance de frais. Présentez simplement votre carte virtuelle ou votre code QR dans nos établissements partenaires en RD Congo pour être pris en charge immédiatement.
+    </p>
+
+    {/* Section Filtres Réseau avec Effet Glassmorphism Intégré */}
+    <div className="mt-6 w-full bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800/80 p-5 rounded-2xl shadow-lg grid grid-cols-1 md:grid-cols-3 gap-5 text-slate-800">
+      
+      {/* Recherche textuelle modernisée */}
+      <div className="relative flex items-center group">
+        <span className="absolute left-4 text-slate-400 group-focus-within:text-[#00A3E0] transition-colors duration-200 z-10">
+          <FaSearch size={14} />
+        </span>
+        <input
+          type="text"
+          placeholder="Rechercher un hôpital, quartier..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-black focus:outline-none focus:ring-2 focus:ring-[#00A3E0] focus:border-transparent transition-all duration-200 shadow-inner"
+        />
+      </div>
+
+      {/* Sélecteur Ville modernisé */}
+      <div className="relative flex items-center">
+        <select
+          value={selectedCity}
+          onChange={(e) => setSelectedCity(e.target.value)}
+          className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-black focus:outline-none focus:ring-2 focus:ring-[#00A3E0] focus:border-transparent transition-all duration-200 appearance-none cursor-pointer shadow-inner"
+        >
+          {cities.map(city => (
+            <option key={city} value={city} className="dark:bg-slate-900 font-bold">
+              {city === "Tous" ? "Toutes les villes" : city}
+            </option>
+          ))}
+        </select>
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-[10px]">▼</div>
+      </div>
+
+      {/* Sélecteur Spécialité modernisé */}
+      <div className="relative flex items-center">
+        <select
+          value={selectedType}
+          onChange={(e) => setSelectedType(e.target.value)}
+          className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-black focus:outline-none focus:ring-2 focus:ring-[#00A3E0] focus:border-transparent transition-all duration-200 appearance-none cursor-pointer shadow-inner"
+        >
+          {types.map(t => (
+            <option key={t} value={t} className="dark:bg-slate-900 font-bold">
+              {t === "Tous" ? "Tous les types" : t === "Santé" ? "Structures Médicales" : "Garages & Réparations"}
+            </option>
+          ))}
+        </select>
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-[10px]">▼</div>
+      </div>
+
+    </div>
+  </div>
+</header>
 
       {/* Affichage de la grille des établissements */}
       <main className="flex-grow max-w-7xl mx-auto px-6 py-12 w-full">

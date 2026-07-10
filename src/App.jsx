@@ -20,6 +20,7 @@ import ContactSupportPage from './pages/ContactPage';
 import TestimonialsPage from './pages/TestimonialsPage'; 
 import BlogPreventionPage from './pages/Blog.jsx';       
 import DashboardPage from './pages/DashboardPage';
+ import Galerie from './pages/Galerie';
 
 // =========================================================================
 // 2. SÉCURITÉ & AUTHENTIFICATION (Dossier src/components/)
@@ -94,6 +95,9 @@ const App = () => {
               <Route path="/contact" element={<ContactSupportPage />} />
               <Route path="/blog" element={<BlogPreventionPage />} />
               <Route path="/dashboard-page" element={<DashboardPage />} />
+              // Dans vos routes existantes :
+              <Route path="/galerie" element={<Galerie />} />
+
 
               {/* =========================================================================
                   4. ESPACE PRIVÉ ET GESTION (Layout Admin avec contrôle d'accès)
