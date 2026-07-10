@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // ✅ useNavigate est indispensable pour faire fonctionner l'action onClick du logo
+import { motion } from 'framer-motion'; // ✅ AJOUTÉ : Importation vitale pour supprimer l'erreur de crash de "motion"
 import { 
   FaLinkedin, FaEnvelope, FaInstagram, FaFacebook, FaWhatsapp, 
   FaShieldAlt, FaMapMarkerAlt, FaRoute, FaPhoneAlt, FaClock 
@@ -98,23 +99,49 @@ export default function Footer() {
         {/* ================= CONTENU CLASSIQUE DU FOOTER ================= */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 pt-4">
           
-          {/* Bloc 1: Identité & Slogan Assurances */}
-          <div className="col-span-1">
-            <h3 className="text-2xl font-black mb-4">
-              <span className="bg-gradient-to-r from-[#00A3E0] via-[#CE1126] to-[#E5B200] dark:to-[#FDD100] text-transparent bg-clip-text tracking-wide uppercase font-black">
-                DRC Assurances
-              </span>
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-bold italic">
+                    {/* Bloc 1: Identité & Slogan Assurances avec Logo Officiel Premium */}
+          <div className="col-span-1 space-y-4">
+            
+            {/* ================= LOGO DYNAMIQUE ET SIGNATURE ARCA INTEGRÉ AU FOOTER ================= */}
+            <motion.div 
+              whileHover={{ scale: 1.015 }}
+              whileTap={{ scale: 0.99 }}
+              className="flex items-center gap-3.5 cursor-pointer shrink-0 group relative py-1 px-1 rounded-xl hover:bg-slate-100/50 dark:hover:bg-slate-800/30 transition-colors duration-300 -ml-1 w-fit" 
+              onClick={() => navigate('/')}
+            >
+              {/* Conteneur de protection du logo avec micro-ombre */}
+              <div className="relative p-1 bg-white dark:bg-slate-800 rounded-lg border border-slate-200/60 dark:border-slate-700/40 transition-all duration-300 shadow-xs">
+                <img 
+                  src="/images/logo.png" 
+                  alt="DRC Assurances" 
+                  className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-102" 
+                />
+              </div>
+
+              {/* Signature ARCA Dynamique et Haute Visibilité (Toujours visible dans le footer) */}
+              <div className="flex flex-col justify-center border-l-2 border-slate-200 dark:border-slate-800/80 pl-3.5 h-8 transition-colors duration-300 group-hover:border-[#00A3E0]">
+                <span className="text-[9px] uppercase tracking-[3.5px] text-slate-500 dark:text-[#00A3E0] font-black transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-red-600 dark:group-hover:text-[#FDD100]">
+                  Écosystème Numérique
+                </span>
+                <span className="text-[8px] uppercase tracking-[2px] text-slate-400 dark:text-slate-500 font-extrabold mt-0.5">
+                  Agréé ARCA
+                </span>
+              </div>
+            </motion.div>
+
+            {/* Slogan Institutionnel */}
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-bold italic pt-1">
               "Votre partenaire de confiance pour la protection de votre famille et de vos biens en RDC, connectant la diaspora au réseau local."
             </p>
+            
             {/* Ligne aux couleurs nationales */}
-            <div className="mt-6 flex gap-1">
+            <div className="mt-4 flex gap-1 pt-1">
               <div className="h-1 w-7 bg-[#00A3E0] rounded-full"></div>
               <div className="h-1 w-4 bg-[#CE1126] rounded-full"></div>
               <div className="h-1 w-2 bg-[#FDD100] rounded-full"></div>
             </div>
           </div>
+
 
           {/* Bloc 2: Navigation Révisée Écosystème */}
           <div className="text-left">
