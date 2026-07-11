@@ -4,14 +4,16 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class', // Gère le mode sombre de votre Navbar/FAQ
+  darkMode: 'class',
   theme: {
     extend: {
-      // ✅ AJOUTEZ CE BLOC POUR ACTIVER LES NOUVELLES POLICES
       fontFamily: {
-        roboto: ['Roboto', 'sans-serif'],           // Crée une classe réutilisable font-roboto
-        Saira: ['Saira', 'sans serif'],
-        Antonio: ['Antonio', 'sans serif']
+        // Idéal pour les paragraphes, boutons et petits textes (Lisibilité maximale)
+        roboto: ['Roboto', 'sans-serif'],
+        // Idéal pour votre grand titre moderne et pro
+        saira: ['Saira', 'sans-serif'],
+        // Disponible au besoin pour vos autres interfaces
+        antonio: ['Antonio', 'sans-serif'],
       },
     },
   },
