@@ -90,7 +90,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Saira', 'Antonio','Roboto' sans-serif;
+  font-family: 'Saira', 'Antonio','Roboto', 'Inter' sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {

@@ -89,7 +89,7 @@ export default function ProjectsPage() {
 <header className="relative bg-slate-100 dark:bg-slate-950 px-6 py-24 pt-32 text-center border-b-4 border-[#00A3E0] overflow-hidden font-sans select-none">
   
   {/* 1. L'IMAGE D'ARRIÈRE-PLAN LUMINEUSE ET TOTALEMENT VISIBLE (100% OPACITÉ) */}
-  <div className="absolute inset-0 z-0">
+  <div className="absolute  inset-0 z-0 ">
     <img 
       src={background1} 
       alt="DRC Assurances Network Background" 

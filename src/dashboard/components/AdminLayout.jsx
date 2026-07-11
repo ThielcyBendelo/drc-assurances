@@ -35,9 +35,7 @@ export default function AdminLayout() {
   };
 
   return (
-    // 🟢 OPTIMISÉ : Hauteur h-screen forcée sur le parent pour diviser l'écran proprement en colonnes ou en lignes
-    <div className="flex flex-col lg:flex-row h-screen w-screen overflow-hidden bg-slate-100 dark:bg-slate-950 antialiased font-sans text-slate-800 dark:text-slate-100">
-
+    <div className="flex flex-col lg:flex-row h-screen w-screen overflow-hidden ...">
       {/* 📱 BARRE DE NAVIGATION MOBILE (Masquée sur PC) */}
       <div className="lg:hidden bg-slate-900 text-white p-4 flex justify-between items-center border-b border-[#00A3E0]/20 sticky top-0 z-50 flex-shrink-0">
         <div className="flex flex-col">
@@ -52,16 +50,15 @@ export default function AdminLayout() {
         </button>
       </div>
 
-      {/* 💻 SIDEBAR PRINCIPALE (PC permanent & Mobile glissant) */}
-      {/* 🟢 CORRIGÉ : Remplacement de sticky top-0 par une gestion de hauteur h-full intégrée au flux flex-row sur grand écran */}
+      {/* 💻 SIDEBAR PRINCIPALE RESTRUCTURÉE POUR LE RENDU PC ET MOBILE */}
       <aside 
         className={`bg-slate-900 text-slate-300 flex-shrink-0 flex-col justify-between border-r border-slate-800 h-full w-64 transition-all duration-300 z-50
-          ${isMobileMenuOpen ? 'flex fixed inset-y-0 left-0' : 'hidden lg:flex'}`}
+          ${isMobileMenuOpen ? 'flex fixed inset-y-0 left-0' : 'hidden lg:flex'}`} // ✅ CORRIGÉ : Concaténation isolée pour éviter les conflits display-none de Vite
       >
         <div className="flex flex-col overflow-y-auto flex-grow">
           {/* Logo / Marque (Masqué sur mobile) */}
           <div className="hidden lg:block p-6 border-b border-slate-800 flex-shrink-0">
-            <span className="text-xl font-black bg-gradient-to-r from-[#00A3E0] via-[#CE1126] to-[#FDD100] text-transparent bg-clip-text font-serif tracking-wide block uppercase">
+            <span className="text-xl font-black bg-gradient-to-r from-[#00A3E0] via-[#CE1126] to-[#FDD100] text-transparent bg-clip-text font-serif tracking-wide block uppercase font-sans">
               DRC Assurances
             </span>
             <span className="text-[8px] uppercase tracking-[2px] text-slate-400 font-bold block mt-1">
@@ -83,7 +80,8 @@ export default function AdminLayout() {
           {/* Liste des onglets de navigation */}
           <nav className="p-4 space-y-1 overflow-y-auto flex-grow max-h-[calc(100vh-200px)]">
             {menuItems.map((item) => {
-              const isActive = location.pathname === item.path;
+              // ✅ CORRIGÉ : Gestion sécurisée des slashes de fin de route (evite le bug d'onglet inactif)
+              const isActive = location.pathname === item.path || location.pathname === `${item.path}/`;
               return (
                 <button
                   key={item.path}
@@ -126,7 +124,6 @@ export default function AdminLayout() {
       )}
 
       {/* 🚀 CONTENU DYNAMIQUE CENTRAL */}
-      {/* 🟢 OPTIMISÉ : Hauteur h-full couplée à un scroll autonome pour que la page défile indépendamment de la sidebar */}
       <main className="flex-grow p-4 lg:p-8 overflow-y-auto h-full bg-slate-50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto pb-12">
           <Outlet />

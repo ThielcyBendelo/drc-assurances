@@ -16,6 +16,7 @@ const contact = [
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const navigate = useNavigate(); // ✅ AJOUTÉ : Initialisation obligatoire pour rediriger vers l'accueil au clic
 
   const socialIcons = {
     Email: FaEnvelope,

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import NavbarSecured from '../components/NavbarSecured';
 import FAQSection from '../components/FAQSection';
 import Footer from '../components/Footer';
+import RippleGrid from '../components/ui/RippleGrid';
 import { 
   FaShieldAlt, 
   FaGlobeAfrica, 
@@ -130,111 +131,119 @@ export default function Home() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col antialiased font-sans text-slate-900 dark:text-slate-100 transition-colors duration-300">
       {/* En-tête de navigation sécurisé */}
       <NavbarSecured />
-         {/* ================= 1. SECTION HERO MODERNE ET PRO OPTIMISÉE ================= */}
-<section className="relative min-h-screen flex flex-col justify-center items-center px-6 py-24 pt-32 overflow-hidden bg-slate-100 dark:bg-slate-950 border-t border-b border-slate-200/60 font-sans text-slate-900 dark:text-white select-none">
-  
-  {/* Images d'arrière-plan locales alternées (Nettes et lumineuses à 85% d'opacité) */}
-  <div 
-    className="absolute inset-0 w-full h-full bg-cover bg-center opacity-85 transform scale-102 transition-all duration-1000 ease-in-out z-0"
-    style={{ 
-      backgroundImage: `url(${backgrounds[bgIndex]})`,
-      transitionProperty: 'background-image'
-    }}
-  />
+{/* ================= 1. SECTION HERO FINTECH PREMIUM (POLICES CORRIGÉES) ================= */}
+<section className="w-full bg-slate-50 dark:bg-slate-950 font-roboto text-slate-900 dark:text-white select-none">
+  {/* La grille interactive s'affiche ici, en arrière-plan de la section Hero */}
+        <RippleGrid />
+ 
+  <div className="max-w-6xl mx-auto px-4 pt-28 pb-16 flex flex-col items-center gap-12">
+    
+    {/* --- BLOC SUPÉRIEUR : BANNIÈRE D'ARRIÈRE-PLAN CADRÉE & RÉDUITE --- */}
+    <div className="relative w-full h-[320px] md:h-[450px] rounded-3xl overflow-hidden shadow-xl border border-slate-200/50 dark:border-slate-800/50 bg-slate-200 dark:bg-slate-900">
+      <div 
+        className="absolute inset-0 w-full h-full bg-cover bg-center transform scale-100 transition-all duration-1000 ease-in-out opacity-90"
+        style={{ 
+          backgroundImage: `url(${backgrounds[bgIndex]})`,
+          transitionProperty: 'background-image'
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10" />
+    </div>
 
-  {/* Flou et dégradé de transition subtil pour fondre le bas de l'image dans la suite de la page */}
-  <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-slate-100 dark:from-slate-950/10 dark:via-transparent dark:to-slate-950 z-10" />
-
-  {/* Contenu textuel encapsulé dans un grand panneau de verre poli pour une lisibilité absolue */}
-  <motion.div 
-    variants={staggerContainer}
-    initial="hidden"
-    animate="visible"
-    className="relative z-20 max-w-5xl mx-auto text-center p-6 md:p-10 bg-white/75 dark:bg-slate-950/75 backdrop-blur-xl rounded-3xl border border-white/50 dark:border-slate-800/40 shadow-2xl space-y-8 flex flex-col items-center max-w-5xl drop-shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
-  >
-    {/* Badge officiel de confiance avec micro-interaction spring */}
-    <motion.span 
-      variants={{
-        hidden: { opacity: 0, scale: 0.8 },
-        visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 200, damping: 15 } }
-      }}
-      className="px-5 py-2 rounded-full bg-white/90 dark:bg-slate-900/90 text-[#007cb0] dark:text-[#00A3E0] text-xs font-black uppercase tracking-widest border border-slate-200 dark:border-slate-800 inline-flex items-center gap-2 shadow-sm"
-    >
-      <FaGlobeAfrica className="animate-spin-slow text-[#FDD100]" /> 
-      <span>Écosystème Numérique Agréé ARCA</span>
-    </motion.span>
-
-    {/* Grand titre cinétique hautement contrasté et lisible */}
-    <motion.h1 
-      variants={{
-        hidden: { opacity: 0, y: 30 },
-        visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } }
-      }}
-      className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight md:leading-none max-w-4xl text-slate-900 dark:text-white"
-    >
-      Protégez votre famille en <br />
-      <span className="bg-gradient-to-r from-[#CE1126] via-[#00A3E0] to-[#E5B200] dark:to-[#FDD100] text-transparent bg-clip-text drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)]">
-        RD Congo depuis l'Étranger
-      </span>
-    </motion.h1>
-
-    {/* Description restructurée (Texte plus dense et cartouche optimisé pour le confort de lecture) */}
-    <motion.p 
-      variants={{
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
-      }}
-      className="text-slate-700 dark:text-slate-200 max-w-3xl mx-auto text-base md:text-xl font-bold leading-relaxed px-4"
-    >
-      Bâtissez un pont de confiance durable. Plus besoin d'envoyer des fonds en urgence par agence de transfert : souscrivez une micro-assurance santé, auto ou scolaire pour vos proches restés au pays avec prise en charge directe et instantanée.
-    </motion.p>
-
-    {/* Séparateur national stylisé */}
+    {/* --- BLOC INFÉRIEUR : CONTENU TYPOGRAPHIQUE HAUT DE GAMME --- */}
     <motion.div 
-      variants={{
-        hidden: { scaleX: 0 },
-        visible: { scaleX: 1, transition: { duration: 0.6, ease: "circOut" } }
-      }} 
-      className="flex justify-center items-center gap-3 my-2"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+      className="w-full max-w-4xl text-center flex flex-col items-center space-y-6 md:space-y-8"
     >
-      <div className="h-[2.5px] w-24 bg-[#00A3E0] rounded-full"></div>
-      <div className="h-3 w-3 rounded-full bg-[#CE1126] animate-pulse"></div>
-      <div className="h-[2.5px] w-24 bg-[#FDD100] rounded-full"></div>
+      {/* Badge officiel de confiance */}
+      <motion.span 
+        variants={{
+          hidden: { opacity: 0, scale: 0.9 },
+          visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 200, damping: 15 } }
+        }}
+        className="px-4 py-1.5 rounded-full bg-white dark:bg-slate-900 text-[#007cb0] dark:text-[#00A3E0] text-xs font-bold uppercase tracking-wider border border-slate-200 dark:border-slate-800 inline-flex items-center gap-2 shadow-sm font-roboto"
+      >
+        <FaGlobeAfrica className="animate-spin-slow text-[#FDD100]" /> 
+        <span>Écosystème Numérique Agréé ARCA</span>
+      </motion.span>
+
+      {/* Titre principal - Style Impact & FinTech (Saira) */}
+      <motion.h1 
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } }
+        }}
+        className="font-saira text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] text-slate-900 dark:text-white"
+      >
+        Protégez votre famille en <br />
+        <span className="bg-gradient-to-r from-[#CE1126] via-[#00A3E0] to-[#E5B200] dark:to-[#FDD100] text-transparent bg-clip-text">
+          RD Congo depuis l'Étranger
+        </span>
+      </motion.h1>
+
+      {/* Séparateur subtil aux couleurs nationales */}
+      <motion.div 
+        variants={{
+          hidden: { scaleX: 0 },
+          visible: { scaleX: 1, transition: { duration: 0.5, ease: "circOut" } }
+        }} 
+        className="flex justify-center items-center gap-2.5"
+      >
+        <div className="h-[3px] w-12 bg-[#00A3E0] rounded-full"></div>
+        <div className="h-2 w-2 rounded-full bg-[#CE1126]"></div>
+        <div className="h-[3px] w-12 bg-[#FDD100] rounded-full"></div>
+      </motion.div>
+
+      {/* Description claire - Style Institutionnel Fluide (Roboto) */}
+      <motion.p 
+        variants={{
+          hidden: { opacity: 0, y: 15 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+        }}
+        className="font-roboto text-slate-600 dark:text-slate-300 max-w-2xl mx-auto text-base md:text-lg font-normal leading-relaxed tracking-wide antialiased"
+      >
+        Bâtissez un pont de confiance durable. Plus besoin d'envoyer des fonds en urgence par agence de transfert : souscrivez une micro-assurance santé, auto ou scolaire pour vos proches restés au pays avec prise en charge directe et instantanée.
+      </motion.p>
+
+      {/* Zone des Boutons d'Action */}
+      <motion.div 
+        variants={{
+          hidden: { opacity: 0, y: 10 },
+          visible: { opacity: 1, y: 0, transition: { delay: 0.1, duration: 0.3 } }
+        }}
+        className="flex flex-col sm:flex-row gap-4 w-full justify-center items-center pt-4"
+      >
+        {/* CTA Principal */}
+        <motion.button 
+          whileHover={{ y: -3, scale: 1.01, transition: { type: "spring", stiffness: 400, damping: 12 } }}
+          whileTap={{ scale: 0.99 }}
+          onClick={() => navigate('/packs-micro')} 
+          className="font-roboto w-full sm:w-64 h-14 bg-[#00A3E0] hover:bg-[#008cc2] text-white rounded-xl font-semibold text-base shadow-lg shadow-[#00A3E0]/20 hover:shadow-[#00A3E0]/30 transition-all duration-200 flex items-center justify-center gap-3 border-b-4 border-[#006a94] group cursor-pointer"
+        >
+          <FaShieldAlt className="group-hover:scale-110 transition-transform duration-200 text-[#FDD100]" /> 
+          <span>Découvrir nos Packs</span>
+          <FaArrowRight size={14} className="transform group-hover:translate-x-1 transition-transform duration-200" />
+        </motion.button>
+
+        {/* CTA Secondaire */}
+        <motion.button 
+          whileHover={{ y: -3, scale: 1.01, transition: { type: "spring", stiffness: 400, damping: 12 } }}
+          whileTap={{ scale: 0.99 }}
+          onClick={() => navigate('/simulateur')} 
+          className="font-roboto w-full sm:w-64 h-14 bg-white dark:bg-slate-900 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-800 rounded-xl font-semibold text-base shadow-sm hover:border-[#00A3E0] dark:hover:border-slate-700 transition-all duration-200 flex items-center justify-center gap-3 group cursor-pointer"
+        >
+          <FaCreditCard className="text-[#00A3E0]" /> 
+          <span>Simuler un Tarif</span>
+        </motion.button>
+      </motion.div>
+
     </motion.div>
 
-    {/* Boutons d'accès transactionnels avec animations Spring asynchrones */}
-    <motion.div 
-      variants={{
-        hidden: { opacity: 0, y: 15 },
-        visible: { opacity: 1, y: 0, transition: { delay: 0.1, duration: 0.4 } }
-      }}
-      className="flex flex-col sm:flex-row gap-5 w-full justify-center items-center px-4 pt-4"
-    >
-      {/* Bouton Principal : Découvrir nos packs */}
-      <motion.button 
-        whileHover={{ y: -4, scale: 1.015, transition: { type: "spring", stiffness: 400, damping: 10 } }}
-        whileTap={{ scale: 0.98 }}
-        onClick={() => navigate('/packs-micro')} 
-        className="w-full sm:w-72 h-14 bg-[#00A3E0] hover:bg-[#008cc2] text-white rounded-xl font-black text-base shadow-lg shadow-[#00A3E0]/20 hover:shadow-[#00A3E0]/40 transition-all duration-200 flex items-center justify-center gap-3 border-b-4 border-[#006a94] group cursor-pointer"
-      >
-        <FaShieldAlt className="group-hover:scale-110 group-hover:rotate-3 transition-transform duration-200 text-[#FDD100]" /> 
-        <span>Découvrir nos Packs</span>
-        <FaArrowRight size={14} className="transform group-hover:translate-x-1.5 transition-transform duration-200" />
-      </motion.button>
-
-      {/* Bouton Secondaire : Simuler un tarif */}
-      <motion.button 
-        whileHover={{ y: -4, scale: 1.015, transition: { type: "spring", stiffness: 400, damping: 10 } }}
-        whileTap={{ scale: 0.98 }}
-        onClick={() => navigate('/simulateur')} 
-        className="w-full sm:w-72 h-14 bg-white dark:bg-slate-900 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-800 rounded-xl font-black text-base shadow-md hover:border-[#00A3E0] dark:hover:border-slate-600 transition-all duration-200 flex items-center justify-center gap-3 group cursor-pointer"
-      >
-        <FaCreditCard className="text-[#00A3E0] group-hover:-translate-y-0.5 transition-transform duration-200" /> 
-        <span>Simuler un Tarif</span>
-      </motion.button>
-    </motion.div>
-  </motion.div>
+  </div>
 </section>
+
 
    {/* ================= 2. SECTION COMMERCIALE ================= */}
 <section className="py-24 max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-3 gap-12 items-center border-t border-b border-slate-200/60 font-sans overflow-hidden">
