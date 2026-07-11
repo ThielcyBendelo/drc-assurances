@@ -60,139 +60,7 @@ import SystemMessaging from './dashboard/Messaging';
 import AccountProfile from './dashboard/Profile';         
 import ForexFinanceDashboard from './dashboard/FinanceDashboard'; 
 
-// 1. COMPOSANT LOCAL CORRIGÉ : RIPPLEGRID (Intégré directement pour éviter les bugs d'import)
-// =========================================================================
-function LocalRippleGrid() {
-  const canvasRef = useRef(null);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animationFrameId;
-
-    const resizeCanvas = () => {
-      if (!canvas || !canvas.parentElement) return;
-      canvas.width = canvas.parentElement.clientWidth || window.innerWidth;
-      canvas.height = canvas.parentElement.clientHeight || 600;
-    };
-
-    resizeCanvas();
-
-    const gap = 30; 
-    const mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000 };
-
-    const handleMouseMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.targetX = e.clientX - rect.left;
-      mouse.targetY = e.clientY - rect.top;
-    };
-
-    const handleMouseLeave = () => {
-      mouse.targetX = -1000;
-      mouse.targetY = -1000;
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    canvas.parentElement?.addEventListener("mouseleave", handleMouseLeave);
-    window.addEventListener("resize", resizeCanvas);
-
-    const render = () => {
-      if (!ctx || !canvas) return;
-      
-      const width = canvas.width;
-      const height = canvas.height;
-      const rows = Math.ceil(height / gap);
-      const cols = Math.ceil(width / gap);
-
-      ctx.clearRect(0, 0, width, height);
-
-      mouse.x += (mouse.targetX - mouse.x) * 0.15;
-      mouse.y += (mouse.targetY - mouse.y) * 0.15;
-
-      const isDark = document.documentElement?.classList.contains("dark") || false;
-      
-      const dotColor = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(15, 23, 42, 0.06)";
-      const activeColor = isDark ? "rgba(0, 163, 224, 0.45)" : "rgba(0, 124, 176, 0.35)";
-
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const x = c * gap + gap / 2;
-          const y = r * gap + gap / 2;
-
-          const dx = mouse.x - x;
-          const dy = mouse.y - y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          let radius = 1.5;
-          let color = dotColor;
-
-          if (dist < 130) {
-            const factor = (130 - dist) / 130;
-            radius = 1.5 + factor * 2.5;
-            ctx.fillStyle = activeColor;
-            color = isDark 
-              ? `rgba(0, 163, 224, ${0.08 + factor * 0.4})` 
-              : `rgba(0, 124, 176, ${0.06 + factor * 0.35})`;
-          }
-
-          ctx.beginPath();
-          ctx.arc(x, y, radius, 0, Math.PI * 2);
-          ctx.fillStyle = color;
-          ctx.fill();
-        }
-      }
-
-      animationFrameId = requestAnimationFrame(render);
-    };
-
-    render();
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("mousemove", handleMouseMove);
-      canvas.parentElement?.removeEventListener("mouseleave", handleMouseLeave);
-      window.removeEventListener("resize", resizeCanvas);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none z-0 block"
-    />
-  );
-}
-
-// =========================================================================
-// 2. COMPOSANT PRINCIPAL DE L'APPLICATION
-// =========================================================================
-export default function App() {
-  
-  const navigate = (path) => {
-    console.log(`Navigation vers : ${path}`);
-  };
-
-  // Déclaration explicite et sécurisée des variantes pour Framer Motion
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.12 }
-    }
-  };
-
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 25 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { type: "spring", stiffness: 90, damping: 18 } 
-    }
-  };
 
 // =========================================================================
 // 🎛️ COMPOSANT LOADER DE TRANSITION INTERACTIVE
@@ -275,7 +143,7 @@ function AnimatedRoutes() {
         <Route path="/dashboard-page" element={<DashboardPage />} />
         <Route path="/galerie" element={<MainGalerie />} />
 
-        {/* --- ESPACE PRIVÉ ET GESTION ADM --- */}
+                {/* --- ESPACE PRIVÉ ET GESTION ADM --- */}
         <Route path="/dashboard" element={<PrivateRoute><AdminLayout /></PrivateRoute>}>
           <Route index element={<AdminHome />} />
           <Route path="clients" element={<BeneficiariesTable />} />
@@ -288,34 +156,45 @@ function AnimatedRoutes() {
           <Route path="finance" element={<ForexFinanceDashboard />} />
         </Route>
         
+        {/* Redirection automatique pour les routes inconnues */}
         <Route path="*" element={<Home />} />
       </Routes>
     </AnimatePresence>
   );
 }
 
-// Wrapper sécurisé pour la Galerie pour garantir le montage de Framer Motion
-function MainGalerie() {
-  return (
-    <Suspense fallback={<PageTransitionLoader />}>
-      <Galerie />
-    </Suspense>
-  );
-}
+// =========================================================================
+// COMPOSANT RACINE DE L'APPLICATION (AVEC GESTION DU SPLASH SCREEN)
+// =========================================================================
+import { useState } from 'react'; // ✅ Sécurisation de l'import pour éviter le crash Esbuild
 
-const App = () => {
-  const [splashDone, setSplashDone] = React.useState(false);
+function App() {
+  const [splashDone, setSplashDone] = useState(false); // ✅ Suppression du "React." qui faisait planter le build
 
   return (
     <ThemeProvider>
+      {/* Écran de démarrage professionnel */}
       {!splashDone && (
         <ProfessionalSplashScreen onComplete={() => setSplashDone(true)} />
       )}
       
+      {/* Contenu principal de la plateforme d'assurance après chargement */}
       {splashDone && (
-        <div className="min-h-screen bg-white dark:bg-slate-950 font-sans antialiased text-slate-900 dark:text-slate-100 transition-colors duration-300 font-['Saira']">
-          <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
+        <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans antialiased">
           
+          {/* Notifications Toast globalisées */}
+          <ToastContainer 
+            position="top-right" 
+            autoClose={3000} 
+            hideProgressBar={false} 
+            newestOnTop 
+            closeOnClick 
+            pauseOnFocusLoss 
+            draggable 
+            pauseOnHover 
+          />
+          
+          {/* Rendu des pages avec animation de transition fluide */}
           <Suspense fallback={<PageTransitionLoader />}>
             <AnimatedRoutes />
           </Suspense>
@@ -323,6 +202,6 @@ const App = () => {
       )}
     </ThemeProvider>
   );
-};
+}
 
 export default App;
