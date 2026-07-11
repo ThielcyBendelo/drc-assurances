@@ -141,7 +141,7 @@ function AnimatedRoutes() {
         <Route path="/contact" element={<ContactSupportPage />} />
         <Route path="/blog" element={<BlogPreventionPage />} />
         <Route path="/dashboard-page" element={<DashboardPage />} />
-        <Route path="/galerie" element={<MainGalerie />} />
+        <Route path="/galerie" element={<Galerie />} />
 
                 {/* --- ESPACE PRIVÉ ET GESTION ADM --- */}
         <Route path="/dashboard" element={<PrivateRoute><AdminLayout /></PrivateRoute>}>
